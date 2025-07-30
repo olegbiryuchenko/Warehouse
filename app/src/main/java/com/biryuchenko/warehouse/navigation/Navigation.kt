@@ -5,6 +5,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.biryuchenko.database.DatabaseScreen
+import com.biryuchenko.database.add.AddItemToDatabaseScreen
 import com.biryuchenko.documents.document.DocumentScreen
 import com.biryuchenko.documents.document.add.AddItemScreen
 import com.biryuchenko.documents.menu.DocumentsScreen
@@ -46,9 +47,12 @@ fun Navigation() {
         }
 
         composable<Database> {
-            DatabaseScreen(navigate = {}, navigateBack = { navController.popBackStack() })
+            DatabaseScreen(
+                navigate = { navController.navigate(AddItemToDatabaseScreen) },
+                navigateBack = { navController.popBackStack() })
 
         }
+        composable<AddItemToDatabaseScreen> { AddItemToDatabaseScreen(navigate = { navController.popBackStack()}) }
     }
 }
 
@@ -69,3 +73,6 @@ object AddDocumentScreen
 
 @Serializable
 object Database
+
+@Serializable
+object AddItemToDatabaseScreen

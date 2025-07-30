@@ -423,4 +423,169 @@ class CalculatorUnitTest {
         // Expected: If count is 0, pricePerUnit returns 0, leading to a total price of 0.
         assertEquals(Pair(0, 0), calculator.calc(price, count, percent))
     }
+
+
+    @Test
+
+    fun `calc should handle whole prices and quantities with no percent`() {
+        // Входные данные: priceIn=100.0, count=2, percent=0
+        // pricePerUnit(100.0, 2, 0) = (100.0 + 0) / 2 = 50.0 -> ceil(50.0) = 50
+        // price(50, 2) = 50 * 2 = 100
+        assertEquals(Pair(50, 100), calculator.calc(100.0, 2, 0))
+    }
+
+    @Test
+
+    fun `calc should handle fractional prices with percent`() {
+        // Входные данные: priceIn=100.0, count=3, percent=10
+        // pricePerUnit(100.0, 3, 10) = (100.0 + (100.0 * 10 / 100)) / 3 = (100.0 + 10.0) / 3 = 110.0 / 3 = 36.66 -> ceil(36.66) = 37
+        // price(37, 3) = 37 * 3 = 111
+        assertEquals(Pair(37, 111), calculator.calc(100.0, 3, 10))
+    }
+
+    @Test
+
+    fun `calc should return zeros when count is zero`() {
+        // Входные данные: priceIn=50.0, count=0, percent=5
+        // pricePerUnit(50.0, 0, 5) -> возвращает 0
+        // price(0, 0) -> возвращает 0
+        assertEquals(Pair(0, 0), calculator.calc(50.0, 0, 5))
+    }
+
+
+    @Test
+
+    fun `pricePerUnit should calculate correctly with positive values and no percent`() {
+        // (100.0 + (100.0 * 0 / 100)) / 4 = 100.0 / 4 = 25.0 -> 25
+        assertEquals(25, calculator.pricePerUnit(100.0, 4, 0))
+    }
+
+    @Test
+
+    fun `pricePerUnit should calculate correctly with positive values and percent`() {
+        // (100.0 + (100.0 * 20 / 100)) / 4 = (100.0 + 20.0) / 4 = 120.0 / 4 = 30.0 -> 30
+        assertEquals(30, calculator.pricePerUnit(100.0, 4, 20))
+    }
+
+    @Test
+
+    fun `pricePerUnit should handle fractional results by ceiling`() {
+        // (10.0 + (10.0 * 0 / 100)) / 3 = 10.0 / 3 = 3.33... -> ceil(3.33...) = 4
+        assertEquals(4, calculator.pricePerUnit(10.0, 3, 0))
+    }
+
+    @Test
+
+    fun `pricePerUnit should return 0 when count is zero`() {
+        assertEquals(0, calculator.pricePerUnit(100.0, 0, 10))
+    }
+
+    @Test
+
+    fun `pricePerUnit should handle zero price`() {
+        // (0.0 + (0.0 * 10 / 100)) / 5 = 0.0 / 5 = 0.0 -> 0
+        assertEquals(0, calculator.pricePerUnit(0.0, 5, 10))
+    }
+
+    @Test
+
+    fun `pricePerUnit should handle negative price`() {
+        // (-10.0 + (-10.0 * 0 / 100)) / 3 = -10.0 / 3 = -3.33... -> ceil(-3.33...) = -3
+        assertEquals(-3, calculator.pricePerUnit(-10.0, 3, 0))
+    }
+
+    @Test
+
+    fun `price should calculate total correctly for positive values`() {
+        // 50 * 2 = 100
+        assertEquals(100, calculator.price(50, 2))
+    }
+
+    @Test
+
+    fun `price should return 0 when count is zero`() {
+        assertEquals(0, calculator.price(50, 0))
+    }
+
+    @Test
+
+    fun `price should return 0 when price is zero`() {
+        assertEquals(0, calculator.price(0, 5))
+    }
+
+    @Test
+
+    fun `price should handle negative price`() {
+        assertEquals(-50, calculator.price(-10, 5))
+    }
+
+
+    @Test
+
+    fun `calculateTotalAmount should return correct total for positive values`() {
+        // ceil(10.0 * 5) = ceil(50.0) = 50
+        assertEquals(50, calculator.calculateTotalAmount(10.0, 5))
+    }
+
+    @Test
+
+    fun `calculateTotalAmount should return 0 when count is zero`() {
+        assertEquals(0, calculator.calculateTotalAmount(10.0, 0))
+    }
+
+    @Test
+
+    fun `calculateTotalAmount should return 0 when price is zero`() {
+        assertEquals(0, calculator.calculateTotalAmount(0.0, 5))
+    }
+
+    @Test
+
+    fun `calculateTotalAmount should round up fractional results`() {
+        // ceil(10.1 * 3) = ceil(30.3) = 31
+        assertEquals(31, calculator.calculateTotalAmount(10.1, 3))
+    }
+
+    @Test
+
+    fun `calculateTotalAmount should handle negative price`() {
+        // ceil(-5.5 * 2) = ceil(-11.0) = -11
+        assertEquals(-11, calculator.calculateTotalAmount(-5.5, 2))
+    }
+
+
+    @Test
+    fun `calculatePricePerUnit should return correct per unit for positive values`() {
+        // ceil(100.0 / 4) = ceil(25.0) = 25
+        assertEquals(25, calculator.calculatePricePerUnit(100.0, 4))
+    }
+
+    @Test
+    fun `calculatePricePerUnit should return 0 when count is zero`() {
+        assertEquals(0, calculator.calculatePricePerUnit(100.0, 0))
+    }
+
+    @Test
+    fun `calculatePricePerUnit should return 0 when price is zero`() {
+        assertEquals(0, calculator.calculatePricePerUnit(0.0, 5))
+    }
+
+    @Test
+    fun `calculatePricePerUnit should round up fractional results`() {
+        // ceil(10.0 / 3) = ceil(3.33...) = 4
+        assertEquals(4, calculator.calculatePricePerUnit(10.0, 3))
+    }
+
+    @Test
+    fun `calculatePricePerUnit should handle negative price`() {
+        // ceil(-10.0 / 3) = ceil(-3.33...) = -3
+        assertEquals(-3, calculator.calculatePricePerUnit(-10.0, 3))
+    }
+
+    @Test
+    fun `calculatePricePerUnit should handle price less than count`() {
+        // ceil(7.0 / 10) = ceil(0.7) = 1
+        assertEquals(1, calculator.calculatePricePerUnit(7.0, 10))
+    }
+
 }

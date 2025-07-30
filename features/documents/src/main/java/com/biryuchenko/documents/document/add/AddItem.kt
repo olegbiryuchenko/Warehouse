@@ -14,6 +14,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.Button
@@ -23,19 +24,31 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.SolidColor
+import androidx.compose.ui.res.colorResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
+import com.biryuchenko.documents.DocumentViewModel
+import com.biryuchenko.documents.R
+import kotlinx.coroutines.launch
 
 
 @Composable
-fun AddItemScreen(navigate: () -> Unit) {
+fun AddItemScreen(
+    navigate: () -> Unit,
+) {
+    val scope = rememberCoroutineScope()
+    val vm: DocumentViewModel = viewModel()
     Column(
         modifier = Modifier
             .fillMaxSize(),
@@ -83,92 +96,128 @@ fun AddItemScreen(navigate: () -> Unit) {
                     .padding(start = 15.dp, end = 15.dp),
             ) {
                 Column {
-                    Text("Out Price:")
+                    Text(stringResource(R.string.OutputPrice))
                     Spacer(Modifier.height(10.dp))
                     OutlinedTextField(
-                        value = "",
-                        label = { Text("Out Price") },
-                        onValueChange = {}
+                        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal),
+                        value = vm.outPrice,
+                        label = { Text(stringResource(R.string.OutputPrice)) },
+                        onValueChange = { txt ->
+                            vm.outPrice = vm.filter(txt)
+                            vm.calculatePricePerUnit()
+                        }
                     )
                 }
                 Spacer(Modifier.width(10.dp))
                 Column {
-                    Text("Out Price:")
+                    Text(stringResource(R.string.OutputPricePerItem))
                     Spacer(Modifier.height(10.dp))
                     OutlinedTextField(
-                        value = "",
-                        label = { Text("Out Price for one item") },
-                        onValueChange = {}
+                        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal),
+                        value = vm.outPriceForOneItem,
+                        label = { Text(stringResource(R.string.OutputPricePerItem)) },
+                        onValueChange = { txt ->
+                            vm.outPriceForOneItem = vm.filter(txt)
+                            vm.calculateTotalAmount()
+                        }
+
                     )
                 }
             }
-            Spacer(Modifier.height(60.dp))
-            Text(
-                modifier = Modifier.width(290.dp),
-                textAlign = TextAlign.Start,
-                text = "Цена:"
-            )
-            Spacer(Modifier.height(10.dp))
-            OutlinedTextField(
-                modifier = Modifier.width(290.dp),
-                placeholder = {
-                    Text(
-                        text = "Цена"
-                    )
-                },
-                label = {
-                    Text(
-                        text = "Введите цену"
-                    )
-                },
-                value = "",
-                onValueChange = {}
-            )
-            Spacer(Modifier.height(10.dp))
-            Text(
-                modifier = Modifier.width(290.dp),
-                textAlign = TextAlign.Start,
-                text = "Наценка:"
-            )
-            Spacer(Modifier.height(10.dp))
-            OutlinedTextField(
-                modifier = Modifier.width(290.dp),
-                placeholder = {
-                    Text(
-                        text = "Наценка"
-                    )
-                },
-                label = {
-                    Text(
-                        text = "Введите наценку"
-                    )
-                },
-                value = "",
-                onValueChange = {}
-            )
-            Spacer(Modifier.height(10.dp))
-            Text(
-                modifier = Modifier.width(290.dp),
-                textAlign = TextAlign.Start,
-                text = "Количество:"
-            )
-            Spacer(Modifier.height(10.dp))
-            OutlinedTextField(
-                modifier = Modifier.width(290.dp),
-                placeholder = {
-                    Text(
-                        text = "Количество"
-                    )
-                },
-                label = {
-                    Text(
-                        text = "Введите Количество"
-                    )
-                },
-                value = "",
-                onValueChange = {}
-            )
-            Spacer(Modifier.height(10.dp))
+            Column(
+                modifier = Modifier
+                    .padding(top = 50.dp, start = 30.dp, end = 30.dp)
+                    .fillMaxWidth()
+            ) {
+                Text(
+                    modifier = Modifier.fillMaxWidth(),
+                    textAlign = TextAlign.Start,
+                    text = stringResource(R.string.fullPrice)
+                )
+                Spacer(Modifier.height(10.dp))
+                OutlinedTextField(
+                    modifier = Modifier.fillMaxWidth(),
+                    placeholder = {
+                        Text(
+                            text = stringResource(R.string.fullPrice)
+                        )
+                    },
+                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal),
+                    label = {
+                        Text(
+                            text = stringResource(R.string.inputPrice)
+                        )
+                    },
+                    value = vm.price,
+                    onValueChange = { txt ->
+
+                        vm.price = vm.filter(txt)
+                        scope.launch {
+                            vm.calc()
+                        }
+                    }
+                )
+                Spacer(Modifier.height(10.dp))
+                Text(
+                    modifier = Modifier.fillMaxWidth(),
+                    textAlign = TextAlign.Start,
+                    text = stringResource(R.string.markup)
+                )
+                Spacer(Modifier.height(10.dp))
+                OutlinedTextField(
+                    modifier = Modifier.fillMaxWidth(),
+                    placeholder = {
+                        Text(
+                            text = stringResource(R.string.markup)
+                        )
+                    },
+                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal),
+                    label = {
+                        Text(
+                            text = stringResource(R.string.inputMarkup)
+                        )
+                    },
+                    value = vm.percent,
+                    onValueChange = { txt ->
+                        vm.percent = vm.filter(txt)
+                        scope.launch {
+                            vm.calc()
+                        }
+                    }
+                )
+                Spacer(Modifier.height(10.dp))
+                Text(
+                    modifier = Modifier.fillMaxWidth(),
+                    textAlign = TextAlign.Start,
+                    text = stringResource(R.string.count)
+                )
+                Spacer(Modifier.height(10.dp))
+                OutlinedTextField(
+                    modifier = Modifier.fillMaxWidth(),
+                    placeholder = {
+                        Text(
+                            text = stringResource(R.string.count)
+                        )
+                    },
+                    label = {
+                        Text(
+                            text = stringResource(R.string.inputCount)
+                        )
+                    },
+                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+                    value = vm.count,
+                    onValueChange = { txt ->
+                        vm.count = vm.filter(txt)
+
+                        scope.launch {
+                            vm.calc()
+                        }
+                    }
+                )
+                Spacer(Modifier.height(10.dp))
+
+
+            }
         }
         Box(
             modifier = Modifier
@@ -182,15 +231,15 @@ fun AddItemScreen(navigate: () -> Unit) {
                     .height(50.dp),
                 shape = RoundedCornerShape(0),
                 colors = ButtonColors(
-                    containerColor = Color(0xFF06923E),
+                    containerColor = colorResource(R.color.Green),
                     contentColor = Color.White,
-                    disabledContentColor = Color(0xFF06923E),
+                    disabledContentColor = colorResource(R.color.Green),
                     disabledContainerColor = Color.White,
                 ),
                 onClick = navigate,
             ) {
                 Text(
-                    text = "Add"
+                    text = stringResource(R.string.add)
                 )
             }
         }

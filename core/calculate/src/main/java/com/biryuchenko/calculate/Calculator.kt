@@ -5,7 +5,7 @@ import kotlin.math.ceil
 
 class Calculator {
 
-    public fun calc(
+    fun calc(
         priceIn: Double,
         count: Int,
         percent: Int,
@@ -20,7 +20,7 @@ class Calculator {
         count: Int,
         percent: Int,
     ): Int {
-        return try {
+        try {
             if (count == 0) {
                 return 0
             }
@@ -28,7 +28,7 @@ class Calculator {
             val ceiledValue = ceil(calculatedValue)
             return ceiledValue.toInt()
         } catch (e: ArithmeticException) {
-            0
+            return 0
         }
     }
 
@@ -44,5 +44,25 @@ class Calculator {
         } catch (e: ArithmeticException) {
             0
         }
+    }
+
+    fun calculateTotalAmount(
+        price: Double,
+        count: Int,
+    ): Int {
+        if (count == 0) {
+            return 0
+        }
+        return ceil(price * count).toInt()
+    }
+
+    fun calculatePricePerUnit(
+        price: Double,
+        count: Int,
+    ): Int {
+        if (count == 0) {
+            return 0
+        }
+        return ceil(price / count).toInt()
     }
 }

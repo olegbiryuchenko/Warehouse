@@ -29,9 +29,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.colorResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.biryuchenko.documents.R
 
 
 @Composable
@@ -51,7 +54,7 @@ fun DocumentsScreen(navigate: () -> Unit, navigateBack: () -> Unit) {
             }
             Spacer(Modifier.width(30.dp))
             Text(
-                text = "Documents",
+                text = stringResource(R.string.DocumentsScreenLabel),
             )
         }
         LazyColumn(
@@ -66,9 +69,9 @@ fun DocumentsScreen(navigate: () -> Unit, navigateBack: () -> Unit) {
                         .width(364.dp)
                         .height(50.dp),
                     colors = ButtonColors(
-                        containerColor = Color(0xFF06923E),
+                        containerColor = colorResource(R.color.Green),
                         contentColor = Color.White,
-                        disabledContentColor = Color(0xFF06923E),
+                        disabledContentColor = colorResource(R.color.Green),
                         disabledContainerColor = Color.White,
                     ),
                     shape = RoundedCornerShape(13),
@@ -81,7 +84,7 @@ fun DocumentsScreen(navigate: () -> Unit, navigateBack: () -> Unit) {
                     ) {
                         Text(
                             modifier = Modifier.weight(0.8f),
-                            text = "Placeholder limit 30 sumbols ",
+                            text = "Placeholder limit 30 symbols ",
                             textAlign = TextAlign.Start,
                         )
                         IconButton(
@@ -118,9 +121,9 @@ fun DocumentsScreen(navigate: () -> Unit, navigateBack: () -> Unit) {
                 modifier = Modifier.size(48.dp),
                 colors = IconButtonColors(
                     contentColor = Color.White,
-                    containerColor = Color(0xFF06923E),
+                    containerColor = colorResource(R.color.Green),
                     disabledContentColor = Color.White,
-                    disabledContainerColor = Color(0xFF06923E),
+                    disabledContainerColor =colorResource(R.color.Green),
                 ),
                 onClick = {}
             ) {

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="DocumentsScreenLabel">Документы</string>
+    <string name="OutputPrice">Цена продажи:</string>
+    <string name="OutputPricePerItem">Цена одной единицы:</string>
+    <string name="fullPrice">Полная цена:</string>
+    <string name="inputPrice">Введите цену</string>
+    <string name="markup">Наценка:</string>
+    <string name="inputMarkup">"Введите наценку"</string>
+    <string name="count">Количество:</string>
+    <string name="inputCount">Введите количество:</string>
+    <string name="add">Добавить</string>
+    <string name="inputDocumentName">Название документа</string>
+    
+</resources>

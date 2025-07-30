@@ -18,9 +18,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.colorResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.biryuchenko.documents.R
 
 @Composable
 fun AddDocumentScreen(navigate: () -> Unit) {
@@ -39,7 +42,7 @@ fun AddDocumentScreen(navigate: () -> Unit) {
             Text(
                 modifier = Modifier.width(290.dp),
                 textAlign = TextAlign.Start,
-                text = "Название документа"
+                text = stringResource(R.string.inputDocumentName)
             )
             Spacer(Modifier.height(10.dp))
             TextField(
@@ -51,7 +54,7 @@ fun AddDocumentScreen(navigate: () -> Unit) {
                 },
                 label = {
                     Text(
-                        text = "Название документа"
+                        text = stringResource(R.string.inputDocumentName)
                     )
                 },
                 value = "",
@@ -70,15 +73,15 @@ fun AddDocumentScreen(navigate: () -> Unit) {
                     .height(50.dp),
                 shape = RoundedCornerShape(0),
                 colors = ButtonColors(
-                    containerColor = Color(0xFF06923E),
+                    containerColor = colorResource(R.color.Green),
                     contentColor = Color.White,
-                    disabledContentColor = Color(0xFF06923E),
+                    disabledContentColor = colorResource(R.color.Green),
                     disabledContainerColor = Color.White,
                 ),
                 onClick = {}
             ) {
                 Text(
-                    text = "Add"
+                    text = stringResource(R.string.add)
                 )
             }
         }

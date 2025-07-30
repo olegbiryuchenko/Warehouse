@@ -17,41 +17,33 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Add
-import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.KeyboardArrowDown
 import androidx.compose.material.icons.outlined.DeleteOutline
 import androidx.compose.material3.AlertDialog
-import androidx.compose.material3.Button
-import androidx.compose.material3.Card
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.IconButtonColors
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.compose.ui.window.Dialog
 import com.biryuchenko.documents.R
 
 
@@ -99,7 +91,7 @@ fun DocumentScreen(navigate: () -> Unit, navigateBack: () -> Unit) {
                         .width(364.dp)
                         .border(
                             width = 1.dp,
-                            color = Color(0xFF06923E),
+                            color = colorResource(R.color.Green),
                             shape = RoundedCornerShape(12.dp)
                         )
                         .clickable {
@@ -194,7 +186,7 @@ fun DocumentScreen(navigate: () -> Unit, navigateBack: () -> Unit) {
                         .fillMaxWidth()
                         .height(1.2.dp)
                         .padding(start = 15.dp, end = 15.dp)
-                        .background(Color(0xFF06923E))
+                        .background(colorResource(R.color.Green))
                 )
                 Spacer(Modifier.height(5.dp))
                 Row(
@@ -267,9 +259,9 @@ fun DocumentScreen(navigate: () -> Unit, navigateBack: () -> Unit) {
         IconButton(
             modifier = Modifier.size(48.dp), colors = IconButtonColors(
                 contentColor = Color.White,
-                containerColor = Color(0xFF06923E),
+                containerColor = colorResource(R.color.Green),
                 disabledContentColor = Color.White,
-                disabledContainerColor = Color(0xFF06923E),
+                disabledContainerColor = colorResource(R.color.Green),
             ), onClick = {
                 wayToAdd.value = !wayToAdd.value
                 isRotated.value = !isRotated.value

@@ -38,6 +38,9 @@ android {
 
 dependencies {
 
+    implementation(project(":core:calculate"))
+
+
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.activity.compose)
@@ -54,7 +57,8 @@ dependencies {
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
 
-
+    //Lifecycle
+    implementation(libs.androidx.lifecycle.viewmodel.compose)
     //Extended Material IconsPack
     implementation(libs.androidx.material.icons.extended)
 }

@@ -174,7 +174,7 @@ fun DatabaseScreen(
                 disabledContentColor = Color.White,
                 disabledContainerColor = Color(0xFF06923E),
             ),
-            onClick = {}
+            onClick = navigate
         ) {
             Icon(imageVector = Icons.Default.Add, contentDescription = "Add document")
         }
