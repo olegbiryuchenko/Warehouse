@@ -1,5 +1,6 @@
 package com.biryuchenko.documents.document
 
+import android.widget.Toast
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
@@ -25,32 +26,45 @@ import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.KeyboardArrowDown
 import androidx.compose.material.icons.outlined.DeleteOutline
-import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.IconButtonColors
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
+import com.biryuchenko.documents.DocumentViewModel
 import com.biryuchenko.documents.R
+import com.biryuchenko.mlkit.Scanner
+import com.biryuchenko.ui.DeleteAlert
+import kotlinx.coroutines.launch
 
 
 @Composable
-fun DocumentScreen(navigate: () -> Unit, navigateBack: () -> Unit) {
-    val wayToAdd = remember { mutableStateOf(false) }
-    val openDialog = remember { mutableStateOf(false) }
+fun DocumentScreen(
+    scanner: Scanner,
+    navigate: () -> Unit,
+    navigateBack: () -> Unit,
+    vm: DocumentViewModel = viewModel()
+) {
+    val scope = rememberCoroutineScope()
+    val context = LocalContext.current
+    var wayToAdd by remember { mutableStateOf(false) }
+    var openDialog by remember { mutableStateOf(false) }
     Column(
         Modifier.fillMaxSize()
     ) {
@@ -122,7 +136,7 @@ fun DocumentScreen(navigate: () -> Unit, navigateBack: () -> Unit) {
                         }
                         //TODO
                         IconButton(
-                            onClick = { openDialog.value = true }
+                            onClick = { openDialog = true }
                         ) {
                             Icon(
                                 imageVector = Icons.Outlined.DeleteOutline,
@@ -215,7 +229,7 @@ fun DocumentScreen(navigate: () -> Unit, navigateBack: () -> Unit) {
         contentAlignment = Alignment.BottomEnd
     ) {
         AnimatedVisibility(
-            visible = wayToAdd.value,
+            visible = wayToAdd,
         ) {
             Column {
                 IconButton(
@@ -224,7 +238,13 @@ fun DocumentScreen(navigate: () -> Unit, navigateBack: () -> Unit) {
                         containerColor = Color(0xff464e5d),
                         disabledContentColor = Color.White,
                         disabledContainerColor = Color(0xff464e5d),
-                    ), onClick = {}) {
+                    ), onClick = {
+                        scope.launch {
+                            vm.result = scanner.startBarcodeScanSuspend(context)
+                            navigate()
+                        }
+                    }
+                ) {
                     Icon(
                         painter = painterResource(id = R.drawable.barcode_scanner_24px),
                         contentDescription = "Barcode Scanner",
@@ -263,7 +283,7 @@ fun DocumentScreen(navigate: () -> Unit, navigateBack: () -> Unit) {
                 disabledContentColor = Color.White,
                 disabledContainerColor = colorResource(R.color.Green),
             ), onClick = {
-                wayToAdd.value = !wayToAdd.value
+                wayToAdd = !wayToAdd
                 isRotated.value = !isRotated.value
             }) {
             Icon(
@@ -274,38 +294,27 @@ fun DocumentScreen(navigate: () -> Unit, navigateBack: () -> Unit) {
                 })
         }
     }
-    //TODO
-    if (openDialog.value) {
-        AlertDialog(
+
+    if (openDialog) {
+        DeleteAlert(
+            title = "Удалить документ",
+            text = "Вы дейсвительно хотите удалить этот документ?",
             onDismissRequest = {
-                // Dismiss the dialog when the user clicks outside the dialog or on the back
-                // button. If you want to disable that functionality, simply use an empty
-                // onCloseRequest.
-                openDialog.value = false
+                openDialog = false
+                Toast.makeText(context, "Отмена", Toast.LENGTH_SHORT).show()
             },
-            title = { Text(text = "Title") },
-            text = {
-                Text(
-                    "This area typically contains the supportive text " +
-                            "which presents the details regarding the Dialog's purpose."
-                )
-            },
-            confirmButton = {
-                TextButton(onClick = { openDialog.value = false }) { Text("Confirm") }
-            },
-            dismissButton = {
-                TextButton(onClick = { openDialog.value = false }) { Text("Dismiss") }
-            },
+            onConfirm = { openDialog = false },
+            onDismiss = { openDialog = false },
         )
     }
-    //TODO
+
 }
 
 
 @Preview(showBackground = true, showSystemUi = true)
 @Composable
 fun Preview() {
-    DocumentScreen(navigate = {}, navigateBack = {})
+    DocumentScreen(navigate = {}, navigateBack = {}, scanner = Scanner())
 }
 
 

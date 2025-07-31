@@ -1,5 +1,6 @@
 package com.biryuchenko.database
 
+import android.widget.Toast
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
@@ -31,18 +32,33 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
+import com.biryuchenko.mlkit.Scanner
+import com.biryuchenko.ui.DeleteAlert
+
+import kotlinx.coroutines.launch
+
 
 @Composable
 fun DatabaseScreen(
+    vm: DatabaseVM,
+    scanner: Scanner,
     navigate: () -> Unit,
-    navigateBack: () -> Unit
+    navigateBack: () -> Unit,
 ) {
+    val context = LocalContext.current
+    val scope = rememberCoroutineScope()
+    var openDialog by remember { mutableStateOf(false) }
+
     Column(
         Modifier.fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally
@@ -103,7 +119,7 @@ fun DatabaseScreen(
                             text = "Снежок мясное ассорти"
                         )
                         IconButton(
-                            onClick = {}
+                            onClick = { openDialog = true }
                         ) {
                             Icon(
                                 imageVector = Icons.Outlined.DeleteOutline,
@@ -174,16 +190,37 @@ fun DatabaseScreen(
                 disabledContentColor = Color.White,
                 disabledContainerColor = Color(0xFF06923E),
             ),
-            onClick = navigate
+            onClick = {
+                scope.launch {
+                    vm.result = scanner.startBarcodeScanSuspend(context)
+                    navigate()
+                }
+            }
+
         ) {
             Icon(imageVector = Icons.Default.Add, contentDescription = "Add document")
         }
     }
+    AnimatedVisibility(
+        visible = openDialog
+    ) {
+        DeleteAlert(
+            title = "Удалить документ",
+            text = "Вы дейсвительно хотите удалить этот документ?",
+            onDismissRequest = {
+                openDialog = false
+                Toast.makeText(context, "Отмена", Toast.LENGTH_SHORT).show()
+            },
+            onConfirm = { openDialog = false },
+            onDismiss = { openDialog = false },
+        )
+    }
+
 }
 
 
 @Preview(showBackground = true, showSystemUi = true)
 @Composable
 fun Preview() {
-    DatabaseScreen(navigate = {}, navigateBack = {})
+    DatabaseScreen(navigate = {}, navigateBack = {}, vm = viewModel(), scanner = Scanner())
 }

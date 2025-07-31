@@ -45,10 +45,10 @@ import kotlinx.coroutines.launch
 
 @Composable
 fun AddItemScreen(
+    vm: DocumentViewModel,
     navigate: () -> Unit,
 ) {
     val scope = rememberCoroutineScope()
-    val vm: DocumentViewModel = viewModel()
     Column(
         modifier = Modifier
             .fillMaxSize(),
@@ -75,7 +75,7 @@ fun AddItemScreen(
                 Spacer(Modifier.width(30.dp))
                 // TODO Document name MUST BE THIS
                 BasicTextField(
-                    value = "name item must be this",
+                    value = vm.result!!,
                     onValueChange = {},
                     modifier = Modifier
                         .fillMaxWidth()
@@ -250,5 +250,5 @@ fun AddItemScreen(
 @Preview(showSystemUi = true, showBackground = true)
 @Composable
 fun Preview() {
-    AddItemScreen(navigate = {})
+    AddItemScreen(navigate = {}, vm = viewModel())
 }

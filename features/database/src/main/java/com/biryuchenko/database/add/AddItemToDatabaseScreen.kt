@@ -27,12 +27,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
+import com.biryuchenko.database.DatabaseVM
 
 @Composable
 fun AddItemToDatabaseScreen(
     navigate: () -> Unit,
-
-    ) {
+    vm: DatabaseVM,
+) {
     Column(
         Modifier.fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -40,8 +42,7 @@ fun AddItemToDatabaseScreen(
         ) {
         Spacer(Modifier.height(30.dp))
         Row(
-            modifier = Modifier.fillMaxWidth(),
-            verticalAlignment = Alignment.CenterVertically
+            modifier = Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically
         ) {
             IconButton(
                 onClick = navigate
@@ -63,30 +64,24 @@ fun AddItemToDatabaseScreen(
         ) {
             Spacer(Modifier.height(50.dp))
             Text(
-                modifier = Modifier.fillMaxWidth(),
-                text = "Штрих Код"
+                modifier = Modifier.fillMaxWidth(), text = "Штрих код"
             )
             Spacer(Modifier.height(5.dp))
             OutlinedTextField(
                 modifier = Modifier.fillMaxWidth(),
-                value = "",
+                value = vm.result!!,
                 readOnly = true,
-                onValueChange = {}
-            )
+                onValueChange = {})
             Spacer(Modifier.height(10.dp))
             Text(
-                modifier = Modifier.fillMaxWidth(),
-                text = "Название"
+                modifier = Modifier.fillMaxWidth(), text = "Название"
             )
             Spacer(Modifier.height(5.dp))
-            OutlinedTextField(
-                modifier = Modifier.fillMaxWidth(),
-                label = {
-                    Text("Введите название")
-                },
-                value = "",
-                onValueChange = {}
-            )
+            OutlinedTextField(modifier = Modifier.fillMaxWidth(), label = {
+                Text("Введите название")
+            }, value = vm.name, onValueChange = { txt ->
+                vm.name = txt
+            })
             Spacer(Modifier.height(20.dp))
         }
         Row(
@@ -101,9 +96,7 @@ fun AddItemToDatabaseScreen(
                     contentColor = Color.White,
                     disabledContentColor = Color(0xFFE67514),
                     disabledContainerColor = Color.White
-                ),
-                onClick = {}
-            ) {
+                ), onClick = {}) {
                 Text("Feed")
             }
             Spacer(Modifier.width(10.dp))
@@ -113,9 +106,7 @@ fun AddItemToDatabaseScreen(
                     contentColor = Color.White,
                     disabledContentColor = Color(0xFF06923E),
                     disabledContainerColor = Color.White
-                ),
-                onClick = {}
-            ) {
+                ), onClick = {}) {
                 Text("Feed")
             }
             Spacer(Modifier.width(10.dp))
@@ -125,9 +116,7 @@ fun AddItemToDatabaseScreen(
                     contentColor = Color.White,
                     disabledContentColor = Color(0xFF18152C),
                     disabledContainerColor = Color.White
-                ),
-                onClick = {}
-            ) {
+                ), onClick = {}) {
                 Text("Feed")
             }
             Spacer(Modifier.width(10.dp))
@@ -137,9 +126,7 @@ fun AddItemToDatabaseScreen(
                     contentColor = Color.White,
                     disabledContentColor = Color(0xFFE67514),
                     disabledContainerColor = Color.White
-                ),
-                onClick = {}
-            ) {
+                ), onClick = {}) {
                 Text("Feed")
             }
             Spacer(Modifier.width(10.dp))
@@ -149,9 +136,7 @@ fun AddItemToDatabaseScreen(
                     contentColor = Color.White,
                     disabledContentColor = Color(0xFF06923E),
                     disabledContainerColor = Color.White
-                ),
-                onClick = {}
-            ) {
+                ), onClick = {}) {
                 Text("Feed")
             }
             Spacer(Modifier.width(10.dp))
@@ -161,9 +146,7 @@ fun AddItemToDatabaseScreen(
                     contentColor = Color.White,
                     disabledContentColor = Color(0xFF18152C),
                     disabledContainerColor = Color.White
-                ),
-                onClick = {}
-            ) {
+                ), onClick = {}) {
                 Text("Feed")
             }
             Spacer(Modifier.width(10.dp))
@@ -173,9 +156,7 @@ fun AddItemToDatabaseScreen(
                     contentColor = Color.White,
                     disabledContentColor = Color(0xFFE67514),
                     disabledContainerColor = Color.White
-                ),
-                onClick = {}
-            ) {
+                ), onClick = {}) {
                 Text("Feed")
             }
             Spacer(Modifier.width(10.dp))
@@ -185,9 +166,7 @@ fun AddItemToDatabaseScreen(
                     contentColor = Color.White,
                     disabledContentColor = Color(0xFF06923E),
                     disabledContainerColor = Color.White
-                ),
-                onClick = {}
-            ) {
+                ), onClick = {}) {
                 Text("Feed")
             }
             Spacer(Modifier.width(10.dp))
@@ -197,42 +176,43 @@ fun AddItemToDatabaseScreen(
                     contentColor = Color.White,
                     disabledContentColor = Color(0xFF18152C),
                     disabledContainerColor = Color.White
-                ),
-                onClick = {}
-            ) {
+                ), onClick = {}) {
                 Text("Feed")
             }
+            Spacer(Modifier.width(10.dp))
         }
-        Box(
+        Spacer(Modifier.height(20.dp))
+    }
+    Box(
+        modifier = Modifier
+            .fillMaxWidth()
+            .fillMaxHeight()
+            .padding(bottom = 15.dp),
+        contentAlignment = Alignment.BottomCenter
+    ) {
+        Button(
             modifier = Modifier
                 .fillMaxWidth()
-                .fillMaxHeight()
-                .padding(bottom = 15.dp),
-            contentAlignment = Alignment.BottomCenter
+                .height(50.dp),
+            shape = RoundedCornerShape(0),
+            colors = ButtonColors(
+                containerColor = Color(0xFF06923E),
+                contentColor = Color.White,
+                disabledContentColor = Color(0xFF06923E),
+                disabledContainerColor = Color.White,
+            ),
+            onClick = navigate,
         ) {
-            Button(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(50.dp),
-                shape = RoundedCornerShape(0),
-                colors = ButtonColors(
-                    containerColor = Color(0xFF06923E),
-                    contentColor = Color.White,
-                    disabledContentColor = Color(0xFF06923E),
-                    disabledContainerColor = Color.White,
-                ),
-                onClick = navigate,
-            ) {
-                Text(
-                    text = "Добавить"
-                )
-            }
+            Text(
+                text = "Добавить"
+            )
         }
     }
 }
 
+
 @Preview(showBackground = true, showSystemUi = true)
 @Composable
 fun Preview() {
-    AddItemToDatabaseScreen(navigate = {})
+    AddItemToDatabaseScreen(navigate = {}, vm = viewModel())
 }

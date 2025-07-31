@@ -40,4 +40,7 @@ dependencies {
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
+
+    //barcode scanner
+    implementation ("com.google.android.gms:play-services-code-scanner:16.1.0")
 }

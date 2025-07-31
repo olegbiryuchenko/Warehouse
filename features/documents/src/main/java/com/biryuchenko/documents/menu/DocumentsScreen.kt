@@ -1,11 +1,12 @@
 package com.biryuchenko.documents.menu
 
+
+import android.widget.Toast
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-
-
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -26,19 +27,31 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.IconButtonColors
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.biryuchenko.documents.R
+import com.biryuchenko.ui.DeleteAlert
 
 
 @Composable
-fun DocumentsScreen(navigate: () -> Unit, navigateBack: () -> Unit) {
+fun DocumentsScreen(
+    addDocument: () -> Unit,
+    navigate: () -> Unit,
+    navigateBack: () -> Unit
+) {
+    val context = LocalContext.current
+    var openDialog by remember { mutableStateOf(false) }
     Column(
         Modifier.fillMaxSize()
     ) {
@@ -98,7 +111,7 @@ fun DocumentsScreen(navigate: () -> Unit, navigateBack: () -> Unit) {
                         }
                         IconButton(
                             modifier = Modifier.weight(0.1f),
-                            onClick = {}
+                            onClick = { openDialog = true }
                         ) {
                             Icon(
                                 imageVector = Icons.Default.Delete,
@@ -123,7 +136,7 @@ fun DocumentsScreen(navigate: () -> Unit, navigateBack: () -> Unit) {
                     contentColor = Color.White,
                     containerColor = colorResource(R.color.Green),
                     disabledContentColor = Color.White,
-                    disabledContainerColor =colorResource(R.color.Green),
+                    disabledContainerColor = colorResource(R.color.Green),
                 ),
                 onClick = {}
             ) {
@@ -131,10 +144,45 @@ fun DocumentsScreen(navigate: () -> Unit, navigateBack: () -> Unit) {
             }
         }
     }
+    Box(
+        modifier = Modifier
+            .padding(bottom = 70.dp, end = 50.dp)
+            .fillMaxSize(),
+        contentAlignment = Alignment.BottomEnd
+    ) {
+        IconButton(
+            modifier = Modifier.size(48.dp),
+            colors = IconButtonColors(
+                contentColor = Color.White,
+                containerColor = colorResource(R.color.Green),
+                disabledContentColor = Color.White,
+                disabledContainerColor = colorResource(R.color.Green),
+            ),
+            onClick = addDocument
+        ) {
+            Icon(imageVector = Icons.Default.Add, contentDescription = "Add document")
+        }
+    }
+
+    AnimatedVisibility(
+        visible = openDialog
+    ) {
+        DeleteAlert(
+            title = "Удалить документ",
+            text = "Вы дейсвительно хотите удалить этот документ?",
+            onDismissRequest = {
+                openDialog = false
+                Toast.makeText(context, "Отмена", Toast.LENGTH_SHORT).show()
+            },
+            onConfirm = { openDialog = false },
+            onDismiss = { openDialog = false },
+        )
+    }
+
 }
 
 @Preview(showBackground = true, showSystemUi = true)
 @Composable
 fun Pr() {
-    DocumentsScreen(navigateBack={}, navigate = {})
+    DocumentsScreen(navigateBack = {}, navigate = {}, addDocument = {})
 }
