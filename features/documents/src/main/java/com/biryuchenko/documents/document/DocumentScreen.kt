@@ -241,7 +241,11 @@ fun DocumentScreen(
                     ), onClick = {
                         scope.launch {
                             vm.result = scanner.startBarcodeScanSuspend(context)
-                            navigate()
+                            if (vm.result != null) {
+                                navigate()
+                            } else {
+                                Toast.makeText(context, "Cancelled", Toast.LENGTH_SHORT).show()
+                            }
                         }
                     }
                 ) {

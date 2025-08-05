@@ -1,0 +1,24 @@
+package com.biryuchenko.room.dao
+
+import androidx.room.Dao
+import androidx.room.Delete
+import androidx.room.Insert
+import androidx.room.Query
+import com.biryuchenko.room.entities.ProductDb
+import com.biryuchenko.room.entities.ProductWithCategory
+import kotlinx.coroutines.flow.Flow
+
+@Dao
+interface ProductsDbDao {
+    @Query("SELECT * FROM productsDb")
+    fun getAll(): Flow<List<ProductDb>>
+
+    @Query("SELECT * FROM productsDb WHERE barcode == :barcode")
+    fun getProduct(barcode: Int): Flow<ProductWithCategory?>
+
+    @Insert
+    fun insertAll(vararg productDb: ProductDb)
+
+    @Delete
+    fun delete(productDb: ProductDb)
+}

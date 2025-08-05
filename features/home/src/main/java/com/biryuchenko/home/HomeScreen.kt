@@ -26,8 +26,9 @@ import androidx.compose.ui.unit.dp
 fun HomeScreen(
     navigateDocumentsScreen: () -> Unit,
     navigateDatabaseScreen: () -> Unit,
+    navigateSettingsScreen: () -> Unit,
 
-) {
+    ) {
     Column(
         modifier = Modifier
             .background(color = Color(0xFF121212))
@@ -47,7 +48,8 @@ fun HomeScreen(
                     disabledContainerColor = Color.White
                 ),
                 shape = RoundedCornerShape(10),
-                onClick = navigateDocumentsScreen) {
+                onClick = navigateDocumentsScreen
+            ) {
                 Box(
                     contentAlignment = Alignment.Center
                 ) {
@@ -66,7 +68,8 @@ fun HomeScreen(
                     disabledContainerColor = Color.White
                 ),
                 shape = RoundedCornerShape(10),
-                onClick = navigateDatabaseScreen) {
+                onClick = navigateDatabaseScreen
+            ) {
                 Box(
                     contentAlignment = Alignment.Center
                 ) {
@@ -80,7 +83,9 @@ fun HomeScreen(
         )
         Row {
             Button(
-                modifier = Modifier.size(385.dp, 150.dp), colors = ButtonColors(
+                modifier = Modifier
+                    .size(150.dp)
+                    .weight(0.5f), colors = ButtonColors(
                     containerColor = Color(0xFFD3ECCD),
                     contentColor = Color.White,
                     disabledContentColor = Color(0xFFD3ECCD),
@@ -88,6 +93,23 @@ fun HomeScreen(
                 ),
                 shape = RoundedCornerShape(10), onClick = {}) {
 
+            }
+            Spacer(
+                Modifier
+                    .width(14.dp)
+            )
+            Button(
+                modifier = Modifier
+                    .size(150.dp)
+                    .weight(0.5f), colors = ButtonColors(
+                    containerColor = Color(0xFF4D9D98),
+                    contentColor = Color.White,
+                    disabledContentColor = Color(0xFF4D9D98),
+                    disabledContainerColor = Color.White
+                ),
+                shape = RoundedCornerShape(10), onClick = navigateSettingsScreen
+            ) {
+                Text("Settings")
             }
         }
 
@@ -97,5 +119,8 @@ fun HomeScreen(
 @Preview(showBackground = true, showSystemUi = true)
 @Composable
 fun GreetingPreview() {
-    HomeScreen(navigateDocumentsScreen = {},navigateDatabaseScreen = {})
+    HomeScreen(
+        navigateDocumentsScreen = {},
+        navigateDatabaseScreen = {},
+        navigateSettingsScreen = {})
 }

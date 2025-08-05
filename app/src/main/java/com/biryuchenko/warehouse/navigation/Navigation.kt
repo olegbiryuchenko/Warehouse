@@ -15,6 +15,10 @@ import com.biryuchenko.documents.menu.DocumentsScreen
 import com.biryuchenko.documents.menu.add.AddDocumentScreen
 import com.biryuchenko.home.HomeScreen
 import com.biryuchenko.mlkit.Scanner
+
+import com.biryuchenko.settings.SettingsScreen
+import com.biryuchenko.settings.categoryScreen.CategoriesScreen
+import com.biryuchenko.settings.categoryScreen.CategoryScreen
 import kotlinx.serialization.Serializable
 
 @Composable
@@ -28,6 +32,7 @@ fun Navigation() {
             HomeScreen(
                 navigateDocumentsScreen = { navController.navigate(DocumentsScreen) },
                 navigateDatabaseScreen = { navController.navigate(Database) },
+                navigateSettingsScreen = { navController.navigate(SettingsScreen) }
             )
         }
         composable<DocumentsScreen> {
@@ -74,6 +79,20 @@ fun Navigation() {
                 }
             )
         }
+        composable<SettingsScreen> {
+            SettingsScreen(navigateBack = { navController.popBackStack() }, navigateToCategories = {
+                navController.navigate(
+                    CategoriesScreen
+                )
+            }
+            )
+        }
+        composable<CategoriesScreen> {
+            CategoriesScreen(
+                navigateBack = { navController.popBackStack() },
+                add = { navController.navigate(CategoriesScreen) })
+        }
+        composable<CategoryScreen> { CategoryScreen(navigateBack = { navController.popBackStack() }) }
     }
 }
 
@@ -97,3 +116,12 @@ object Database
 
 @Serializable
 object AddItemToDatabaseScreen
+
+@Serializable
+object SettingsScreen
+
+@Serializable
+object CategoryScreen
+
+@Serializable
+object CategoriesScreen

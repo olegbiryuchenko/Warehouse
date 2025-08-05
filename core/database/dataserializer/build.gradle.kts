@@ -1,6 +1,7 @@
 plugins {
     alias(libs.plugins.android.library)
     alias(libs.plugins.kotlin.android)
+    kotlin("plugin.serialization") version "2.2.0"
 }
 
 android {
@@ -29,6 +30,7 @@ android {
     }
     kotlinOptions {
         jvmTarget = "11"
+
     }
 }
 
@@ -40,4 +42,13 @@ dependencies {
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
+
+    //Serialization
+    implementation(libs.kotlinx.serialization.json)
+
+    testImplementation(libs.mockito.core)
+
+    // https://mvnrepository.com/artifact/org.mockito.kotlin/mockito-kotlin
+    testImplementation(libs.mockito.kotlin)
+    testImplementation(kotlin("test"))
 }

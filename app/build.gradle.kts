@@ -46,6 +46,7 @@ dependencies {
     implementation(project(":features:home"))
     implementation(project(":features:settings"))
     implementation(project(":core:mlkit"))
+    implementation(project(":core:repository"))
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)

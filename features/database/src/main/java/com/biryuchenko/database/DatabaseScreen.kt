@@ -44,7 +44,6 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.biryuchenko.mlkit.Scanner
 import com.biryuchenko.ui.DeleteAlert
-
 import kotlinx.coroutines.launch
 
 
@@ -193,7 +192,11 @@ fun DatabaseScreen(
             onClick = {
                 scope.launch {
                     vm.result = scanner.startBarcodeScanSuspend(context)
-                    navigate()
+                    if (vm.result != null) {
+                        navigate()
+                    } else {
+                        Toast.makeText(context, "Cancelled", Toast.LENGTH_SHORT).show()
+                    }
                 }
             }
 

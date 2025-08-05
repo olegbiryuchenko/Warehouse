@@ -7,7 +7,6 @@ import androidx.lifecycle.ViewModel
 import com.biryuchenko.calculate.Calculator
 import kotlinx.coroutines.delay
 
-
 class DocumentViewModel : ViewModel() {
     var result: String? = ""
 
@@ -24,12 +23,11 @@ class DocumentViewModel : ViewModel() {
         delay(300)
         if (
             price.toDoubleOrNull() == null ||
-            percent.toDoubleOrNull() == null ||
-            count.toDoubleOrNull() == null
+            percent.toIntOrNull() == null ||
+            count.toIntOrNull() == null
         ) {
             return
         }
-
         output = calculator.calc(
             price.toDouble(),
             count.toInt(),
@@ -42,7 +40,7 @@ class DocumentViewModel : ViewModel() {
     fun calculateTotalAmount() {
         if (
             outPriceForOneItem.toDoubleOrNull() == null ||
-            count.toDoubleOrNull() == null
+            count.toIntOrNull() == null
         ) {
             return
         }
@@ -54,7 +52,7 @@ class DocumentViewModel : ViewModel() {
     fun calculatePricePerUnit() {
         if (
             outPrice.toDoubleOrNull() == null ||
-            count.toDoubleOrNull() == null
+            count.toIntOrNull() == null
         ) {
             return
         }
