@@ -4,8 +4,11 @@ import com.biryuchenko.room.dao.CategoryDao
 import com.biryuchenko.room.entities.Category
 import com.biryuchenko.room.repository.interfaces.CategoryRepository
 import kotlinx.coroutines.flow.Flow
+import javax.inject.Inject
 
-class OfflineCategoryRepository(private val categoryDao: CategoryDao) : CategoryRepository {
+class OfflineCategoryRepository @Inject constructor(
+    private val categoryDao: CategoryDao
+) : CategoryRepository {
     override fun getAllItemsStream(): Flow<List<Category>> {
         return categoryDao.getAll()
     }

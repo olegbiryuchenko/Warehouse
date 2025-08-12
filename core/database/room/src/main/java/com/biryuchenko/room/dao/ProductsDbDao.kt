@@ -11,14 +11,14 @@ import kotlinx.coroutines.flow.Flow
 @Dao
 interface ProductsDbDao {
     @Query("SELECT * FROM productsDb")
-    fun getAll(): Flow<List<ProductDb>>
+    fun getAll(): Flow<List<ProductWithCategory>>
 
     @Query("SELECT * FROM productsDb WHERE barcode == :barcode")
-    fun getProduct(barcode: Int): Flow<ProductWithCategory?>
+    fun getProduct(barcode: String): Flow<ProductWithCategory?>
 
     @Insert
-    fun insertAll(vararg productDb: ProductDb)
+    suspend fun insertAll(vararg productDb: ProductDb)
 
     @Delete
-    fun delete(productDb: ProductDb)
+    suspend fun delete(productDb: ProductDb)
 }

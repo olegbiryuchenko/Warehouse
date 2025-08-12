@@ -11,6 +11,8 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
@@ -22,19 +24,28 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.biryuchenko.database.DatabaseVM
 
 @Composable
 fun AddItemToDatabaseScreen(
     navigate: () -> Unit,
-    vm: DatabaseVM,
+    vm: DatabaseVM = hiltViewModel(),
+    barcode: String,
 ) {
+    val categories by vm.allCategories.collectAsState()
+
+
     Column(
         Modifier.fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -69,7 +80,7 @@ fun AddItemToDatabaseScreen(
             Spacer(Modifier.height(5.dp))
             OutlinedTextField(
                 modifier = Modifier.fillMaxWidth(),
-                value = vm.result!!,
+                value = barcode,
                 readOnly = true,
                 onValueChange = {})
             Spacer(Modifier.height(10.dp))
@@ -84,128 +95,56 @@ fun AddItemToDatabaseScreen(
             })
             Spacer(Modifier.height(20.dp))
         }
-        Row(
+        LazyRow(
             modifier = Modifier
                 .fillMaxWidth()
-                .horizontalScroll(rememberScrollState()),
         ) {
-            Spacer(Modifier.width(10.dp))
-            Button(
-                colors = ButtonColors(
-                    containerColor = Color(0xFFE67514),
-                    contentColor = Color.White,
-                    disabledContentColor = Color(0xFFE67514),
-                    disabledContainerColor = Color.White
-                ), onClick = {}) {
-                Text("Feed")
+            items(categories) { category ->
+
+                Spacer(Modifier.width(10.dp))
+                Button(
+                    colors = ButtonColors(
+                        containerColor = Color(0xFFE67514),
+                        contentColor = Color.White,
+                        disabledContentColor = Color(0xFFE67514),
+                        disabledContainerColor = Color.White
+                    ), onClick = {
+                        vm.categoryId = category.uid
+                        vm.category = category.category
+                    }) {
+                    Text(category.category)
+                }
+                Spacer(Modifier.width(10.dp))
+                Spacer(Modifier.height(20.dp))
             }
-            Spacer(Modifier.width(10.dp))
-            Button(
-                colors = ButtonColors(
-                    containerColor = Color(0xFF06923E),
-                    contentColor = Color.White,
-                    disabledContentColor = Color(0xFF06923E),
-                    disabledContainerColor = Color.White
-                ), onClick = {}) {
-                Text("Feed")
-            }
-            Spacer(Modifier.width(10.dp))
-            Button(
-                colors = ButtonColors(
-                    containerColor = Color(0xFF18152C),
-                    contentColor = Color.White,
-                    disabledContentColor = Color(0xFF18152C),
-                    disabledContainerColor = Color.White
-                ), onClick = {}) {
-                Text("Feed")
-            }
-            Spacer(Modifier.width(10.dp))
-            Button(
-                colors = ButtonColors(
-                    containerColor = Color(0xFFE67514),
-                    contentColor = Color.White,
-                    disabledContentColor = Color(0xFFE67514),
-                    disabledContainerColor = Color.White
-                ), onClick = {}) {
-                Text("Feed")
-            }
-            Spacer(Modifier.width(10.dp))
-            Button(
-                colors = ButtonColors(
-                    containerColor = Color(0xFF06923E),
-                    contentColor = Color.White,
-                    disabledContentColor = Color(0xFF06923E),
-                    disabledContainerColor = Color.White
-                ), onClick = {}) {
-                Text("Feed")
-            }
-            Spacer(Modifier.width(10.dp))
-            Button(
-                colors = ButtonColors(
-                    containerColor = Color(0xFF18152C),
-                    contentColor = Color.White,
-                    disabledContentColor = Color(0xFF18152C),
-                    disabledContainerColor = Color.White
-                ), onClick = {}) {
-                Text("Feed")
-            }
-            Spacer(Modifier.width(10.dp))
-            Button(
-                colors = ButtonColors(
-                    containerColor = Color(0xFFE67514),
-                    contentColor = Color.White,
-                    disabledContentColor = Color(0xFFE67514),
-                    disabledContainerColor = Color.White
-                ), onClick = {}) {
-                Text("Feed")
-            }
-            Spacer(Modifier.width(10.dp))
-            Button(
-                colors = ButtonColors(
-                    containerColor = Color(0xFF06923E),
-                    contentColor = Color.White,
-                    disabledContentColor = Color(0xFF06923E),
-                    disabledContainerColor = Color.White
-                ), onClick = {}) {
-                Text("Feed")
-            }
-            Spacer(Modifier.width(10.dp))
-            Button(
-                colors = ButtonColors(
-                    containerColor = Color(0xFF18152C),
-                    contentColor = Color.White,
-                    disabledContentColor = Color(0xFF18152C),
-                    disabledContainerColor = Color.White
-                ), onClick = {}) {
-                Text("Feed")
-            }
-            Spacer(Modifier.width(10.dp))
         }
-        Spacer(Modifier.height(20.dp))
-    }
-    Box(
-        modifier = Modifier
-            .fillMaxWidth()
-            .fillMaxHeight()
-            .padding(bottom = 15.dp),
-        contentAlignment = Alignment.BottomCenter
-    ) {
-        Button(
+        Box(
             modifier = Modifier
                 .fillMaxWidth()
-                .height(50.dp),
-            shape = RoundedCornerShape(0),
-            colors = ButtonColors(
-                containerColor = Color(0xFF06923E),
-                contentColor = Color.White,
-                disabledContentColor = Color(0xFF06923E),
-                disabledContainerColor = Color.White,
-            ),
-            onClick = navigate,
+                .fillMaxHeight()
+                .padding(bottom = 15.dp),
+            contentAlignment = Alignment.BottomCenter
         ) {
-            Text(
-                text = "Добавить"
-            )
+            Button(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(50.dp),
+                shape = RoundedCornerShape(0),
+                colors = ButtonColors(
+                    containerColor = Color(0xFF06923E),
+                    contentColor = Color.White,
+                    disabledContentColor = Color(0xFF06923E),
+                    disabledContainerColor = Color.White,
+                ),
+                onClick = {
+                    vm.add(barcode)
+                    navigate()
+                },
+            ) {
+                Text(
+                    text = "Добавить"
+                )
+            }
         }
     }
 }
@@ -214,5 +153,5 @@ fun AddItemToDatabaseScreen(
 @Preview(showBackground = true, showSystemUi = true)
 @Composable
 fun Preview() {
-    AddItemToDatabaseScreen(navigate = {}, vm = viewModel())
+    AddItemToDatabaseScreen(navigate = {}, vm = viewModel(), barcode = "ljp")
 }

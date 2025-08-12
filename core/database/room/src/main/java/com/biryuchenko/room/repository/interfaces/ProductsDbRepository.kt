@@ -5,11 +5,11 @@ import com.biryuchenko.room.entities.ProductWithCategory
 import kotlinx.coroutines.flow.Flow
 
 interface ProductsDbRepository {
-    fun getAllItemsStream(): Flow<List<ProductDb>>
+    fun getAllItemsStream(): Flow<List<ProductWithCategory>>
 
-    fun getItemStream(barcode: Int): Flow<ProductWithCategory?>
+    fun getItemStream(barcode: String): Flow<ProductWithCategory?>
 
-    suspend fun insertCategory(category: ProductDb)
+    suspend fun insertCategory(productDb: ProductDb)
 
-    suspend fun deleteItem(category: ProductDb)
+    suspend fun deleteItem(productDb: ProductDb)
 }

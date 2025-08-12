@@ -1,6 +1,8 @@
 plugins {
     alias(libs.plugins.android.library)
     alias(libs.plugins.kotlin.android)
+    id("kotlin-kapt")
+    id("com.google.dagger.hilt.android")
 }
 
 android {
@@ -33,25 +35,22 @@ android {
 }
 
 dependencies {
+    // Hilt Core
+    implementation(libs.hilt.android)
+    kapt(libs.hilt.compiler) // Hilt-компилятор для обработки аннотаций
 
-    implementation(libs.androidx.room.runtime)
-    
+    // Hilt для ViewModel
+    kapt(libs.androidx.hilt.compiler)
 
-    // If this project only uses Java source, use the Java annotationProcessor
-    // No additional plugins are necessary
-    annotationProcessor(libs.androidx.room.compiler)
+    // Room
+    implementation(libs.androidx.room.runtime.v270beta01) // Обновленная версия
+    implementation(libs.androidx.room.ktx.v270beta01) // Обновленная версия
+    kapt(libs.androidx.room.compiler.v270beta01) // Компилятор Room для обработки аннотаций
 
-    // optional - Kotlin Extensions and Coroutines support for Room
-    implementation(libs.androidx.room.ktx)
-
-    // optional - Test helpers
-    testImplementation(libs.androidx.room.testing)
-
-    // optional - Paging 3 Integration
-    implementation(libs.androidx.room.paging)
-
+    // Kotlin Coroutines
     implementation(libs.kotlinx.coroutines.core)
     implementation(libs.kotlinx.coroutines.android)
+
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)

@@ -18,6 +18,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
@@ -29,6 +30,7 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.IconButtonColors
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -41,23 +43,26 @@ import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.biryuchenko.mlkit.Scanner
+import com.biryuchenko.room.entities.ProductDb
 import com.biryuchenko.ui.DeleteAlert
 import kotlinx.coroutines.launch
 
 
 @Composable
 fun DatabaseScreen(
-    vm: DatabaseVM,
+    vm: DatabaseVM = hiltViewModel(),
     scanner: Scanner,
-    navigate: () -> Unit,
+    navigate: (String) -> Unit,
     navigateBack: () -> Unit,
 ) {
     val context = LocalContext.current
     val scope = rememberCoroutineScope()
     var openDialog by remember { mutableStateOf(false) }
-
+    var onDelete: ProductDb by remember { mutableStateOf(ProductDb(0, ",", "", 0)) }
+    val products by vm.allProducts.collectAsState()
     Column(
         Modifier.fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally
@@ -81,7 +86,7 @@ fun DatabaseScreen(
         }
         Spacer(Modifier.height(20.dp))
         LazyColumn {
-            items(4) {
+            items(products) { product ->
                 val isRotated = remember { mutableStateOf(false) }
 
                 // Анимируем угол поворота
@@ -115,10 +120,16 @@ fun DatabaseScreen(
                             modifier = Modifier
                                 .weight(0.6f)
                                 .padding(start = 15.dp, top = 10.dp, bottom = 10.dp),
-                            text = "Снежок мясное ассорти"
+                            text = product.product.name
                         )
                         IconButton(
-                            onClick = { openDialog = true }
+                            onClick = {
+                                openDialog = true
+
+                                onDelete = product.product
+
+
+                            }
                         ) {
                             Icon(
                                 imageVector = Icons.Outlined.DeleteOutline,
@@ -159,12 +170,12 @@ fun DatabaseScreen(
                             }
                             Column {
                                 Text(
-                                    text = "TESTIGN"
+                                    text = product.product.name
                                 )
                                 Spacer(Modifier.height(15.dp))
-                                Text(text = "233458200")
+                                Text(text = product.product.barcode)
                                 Spacer(Modifier.height(15.dp))
-                                Text(text = "Feed")
+                                Text(text = product.categoryDetails.category)
                                 Spacer(Modifier.height(15.dp))
                             }
                         }
@@ -191,9 +202,9 @@ fun DatabaseScreen(
             ),
             onClick = {
                 scope.launch {
-                    vm.result = scanner.startBarcodeScanSuspend(context)
-                    if (vm.result != null) {
-                        navigate()
+                    val result = scanner.startBarcodeScanSuspend(context)
+                    if (result != null) {
+                        navigate(result)
                     } else {
                         Toast.makeText(context, "Cancelled", Toast.LENGTH_SHORT).show()
                     }
@@ -214,7 +225,12 @@ fun DatabaseScreen(
                 openDialog = false
                 Toast.makeText(context, "Отмена", Toast.LENGTH_SHORT).show()
             },
-            onConfirm = { openDialog = false },
+            onConfirm = {
+                openDialog = false
+                vm.delete(
+                    onDelete
+                )
+            },
             onDismiss = { openDialog = false },
         )
     }

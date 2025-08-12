@@ -32,13 +32,19 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.biryuchenko.documents.R
+import com.biryuchenko.documents.menu.DocumentsViewModel
+import com.biryuchenko.room.entities.Document
+import java.sql.Date
 
 @Composable
-fun AddDocumentScreen(navigate: () -> Unit) {
+fun AddDocumentScreen(
+    navigate: () -> Unit,
+    vm: DocumentsViewModel = hiltViewModel()
+) {
     //TODO REWRITE
     val maxLength = 30
-    var text by remember { mutableStateOf("") }
     Column(
         modifier = Modifier
             .fillMaxSize(),
@@ -57,7 +63,10 @@ fun AddDocumentScreen(navigate: () -> Unit) {
                 IconButton(
                     onClick = navigate
                 ) {
-                    Icon(imageVector = Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")
+                    Icon(
+                        imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                        contentDescription = "Back"
+                    )
                 }
                 Spacer(Modifier.width(30.dp))
                 Text(
@@ -83,13 +92,13 @@ fun AddDocumentScreen(navigate: () -> Unit) {
                         text = stringResource(R.string.inputDocumentName)
                     )
                 },
-                value = text,
+                value = vm.text,
                 supportingText = {
-                    Text(text = "${text.length}/$maxLength")
+                    Text(text = "${vm.text.length}/$maxLength")
                 },
-                onValueChange = {newText ->
+                onValueChange = { newText ->
                     if (newText.length <= maxLength) {
-                        text = newText
+                        vm.text = newText
                     }
                 }
 
@@ -112,7 +121,10 @@ fun AddDocumentScreen(navigate: () -> Unit) {
                     disabledContentColor = colorResource(R.color.Green),
                     disabledContainerColor = Color.White,
                 ),
-                onClick = {}
+                onClick = {
+                    vm.add()
+                    navigate()
+                }
             ) {
                 Text(
                     text = stringResource(R.string.add)
@@ -126,5 +138,4 @@ fun AddDocumentScreen(navigate: () -> Unit) {
 @Preview(showSystemUi = true, showBackground = true)
 @Composable
 fun Preview() {
-    AddDocumentScreen {  }
 }

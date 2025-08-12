@@ -7,6 +7,6 @@ import androidx.room.PrimaryKey
 @Entity(tableName = "documents")
 data class Document(
     @PrimaryKey(autoGenerate = true) val uid: Long = 0,
-    @ColumnInfo(name = "category") val name: String,
-    @ColumnInfo(name = "percent") val date: String
+    @ColumnInfo(name = "document") val document: String,
+    @ColumnInfo(name = "date") val date: Long,
 )

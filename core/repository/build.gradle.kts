@@ -1,6 +1,8 @@
 plugins {
     alias(libs.plugins.android.library)
     alias(libs.plugins.kotlin.android)
+    id("kotlin-kapt")
+    id("com.google.dagger.hilt.android")
 }
 
 android {
@@ -37,11 +39,13 @@ dependencies {
     implementation(project(":core:ui"))
     implementation(project(":core:database:room"))
     implementation(project(":core:mlkit"))
-    implementation(project(":core:database"))
 
     implementation(libs.androidx.room.runtime)
 
+    implementation(libs.hilt.android)
+    kapt (libs.hilt.compiler)
 
+    kapt (libs.androidx.hilt.compiler)
     // If this project only uses Java source, use the Java annotationProcessor
     // No additional plugins are necessary
     annotationProcessor(libs.androidx.room.compiler)

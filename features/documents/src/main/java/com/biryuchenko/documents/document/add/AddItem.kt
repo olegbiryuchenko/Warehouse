@@ -37,15 +37,16 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.biryuchenko.documents.DocumentViewModel
 import com.biryuchenko.documents.R
+import com.biryuchenko.documents.document.DocumentDbVm
 import kotlinx.coroutines.launch
 
 
 @Composable
 fun AddItemScreen(
-    vm: DocumentViewModel,
+    vm: DocumentDbVm = hiltViewModel(),
     navigate: () -> Unit,
 ) {
     val scope = rememberCoroutineScope()
@@ -205,9 +206,9 @@ fun AddItemScreen(
                         )
                     },
                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
-                    value = vm.count,
+                    value = vm.quantity,
                     onValueChange = { txt ->
-                        vm.count = vm.filter(txt)
+                        vm.quantity = vm.filter(txt)
 
                         scope.launch {
                             vm.calc()
@@ -236,7 +237,10 @@ fun AddItemScreen(
                     disabledContentColor = colorResource(R.color.Green),
                     disabledContainerColor = Color.White,
                 ),
-                onClick = navigate,
+                onClick = {
+            //        roomVm.add(Product(category = ,))
+                    navigate()
+                }
             ) {
                 Text(
                     text = stringResource(R.string.add)

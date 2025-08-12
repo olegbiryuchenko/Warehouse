@@ -5,21 +5,24 @@ import com.biryuchenko.room.entities.ProductDb
 import com.biryuchenko.room.entities.ProductWithCategory
 import com.biryuchenko.room.repository.interfaces.ProductsDbRepository
 import kotlinx.coroutines.flow.Flow
+import javax.inject.Inject
 
-class OfflineProductsDbRepository(val productDbDao: ProductsDbDao) : ProductsDbRepository {
-    override fun getAllItemsStream(): Flow<List<ProductDb>> {
-        return productDbDao.getAll()
+class OfflineProductsDbRepository @Inject constructor(
+    private val productsDbDao: ProductsDbDao
+)  : ProductsDbRepository {
+    override fun getAllItemsStream(): Flow<List<ProductWithCategory>> {
+        return productsDbDao.getAll()
     }
 
-    override fun getItemStream(barcode: Int): Flow<ProductWithCategory?> {
-        return productDbDao.getProduct(barcode)
+    override fun getItemStream(barcode: String): Flow<ProductWithCategory?> {
+        return productsDbDao.getProduct(barcode)
     }
 
-    override suspend fun insertCategory(category: ProductDb) {
-        return productDbDao.insertAll(category)
+    override suspend fun insertCategory(productDb: ProductDb) {
+        return productsDbDao.insertAll(productDb)
     }
 
-    override suspend fun deleteItem(category: ProductDb) {
-        return productDbDao.delete(category)
+    override suspend fun deleteItem(productDb: ProductDb) {
+        return productsDbDao.delete(productDb)
     }
 }

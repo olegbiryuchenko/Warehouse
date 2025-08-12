@@ -14,6 +14,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
@@ -27,6 +28,7 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.IconButtonColors
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -40,18 +42,24 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.biryuchenko.documents.R
+import com.biryuchenko.room.entities.Document
+import com.biryuchenko.room.entities.ProductDb
 import com.biryuchenko.ui.DeleteAlert
 
 
 @Composable
 fun DocumentsScreen(
     addDocument: () -> Unit,
-    navigate: () -> Unit,
-    navigateBack: () -> Unit
+    navigate: (Long) -> Unit,
+    navigateBack: () -> Unit,
+    vm: DocumentsViewModel = hiltViewModel()
 ) {
+    val documents by vm.allDocuments.collectAsState()
     val context = LocalContext.current
     var openDialog by remember { mutableStateOf(false) }
+    var documentToDelete by remember { mutableStateOf<Document?>(null) }
     Column(
         Modifier.fillMaxSize()
     ) {
@@ -76,7 +84,7 @@ fun DocumentsScreen(
                 .fillMaxSize()
                 .padding(top = 40.dp)
         ) {
-            items(4) {
+            items(documents) { document ->
                 Button(
                     modifier = Modifier
                         .width(364.dp)
@@ -89,7 +97,7 @@ fun DocumentsScreen(
                     ),
                     shape = RoundedCornerShape(13),
 
-                    onClick = navigate
+                    onClick = { navigate(document.uid) }
                 ) {
                     Row(
                         modifier = Modifier.fillMaxSize(),
@@ -97,7 +105,7 @@ fun DocumentsScreen(
                     ) {
                         Text(
                             modifier = Modifier.weight(0.8f),
-                            text = "Placeholder limit 30 symbols ",
+                            text = document.document,
                             textAlign = TextAlign.Start,
                         )
                         IconButton(
@@ -111,7 +119,10 @@ fun DocumentsScreen(
                         }
                         IconButton(
                             modifier = Modifier.weight(0.1f),
-                            onClick = { openDialog = true }
+                            onClick = {
+                                openDialog = true
+                                documentToDelete = document
+                            }
                         ) {
                             Icon(
                                 imageVector = Icons.Default.Delete,
@@ -123,25 +134,6 @@ fun DocumentsScreen(
                 Spacer(Modifier.height(10.dp))
             }
 
-        }
-        Box(
-            modifier = Modifier
-                .padding(bottom = 70.dp, end = 50.dp)
-                .fillMaxSize(),
-            contentAlignment = Alignment.BottomEnd
-        ) {
-            IconButton(
-                modifier = Modifier.size(48.dp),
-                colors = IconButtonColors(
-                    contentColor = Color.White,
-                    containerColor = colorResource(R.color.Green),
-                    disabledContentColor = Color.White,
-                    disabledContainerColor = colorResource(R.color.Green),
-                ),
-                onClick = {}
-            ) {
-                Icon(imageVector = Icons.Default.Add, contentDescription = "Add document")
-            }
         }
     }
     Box(
@@ -169,12 +161,16 @@ fun DocumentsScreen(
     ) {
         DeleteAlert(
             title = "Удалить документ",
-            text = "Вы дейсвительно хотите удалить этот документ?",
+            text = "Вы дейсвительно хотите удалить " + documentToDelete?.document,
             onDismissRequest = {
                 openDialog = false
                 Toast.makeText(context, "Отмена", Toast.LENGTH_SHORT).show()
             },
-            onConfirm = { openDialog = false },
+            onConfirm = {
+                openDialog = false
+                documentToDelete?.let { vm.delete(it) }
+                documentToDelete = null
+            },
             onDismiss = { openDialog = false },
         )
     }

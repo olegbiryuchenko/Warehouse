@@ -3,9 +3,13 @@ package com.biryuchenko.room.repository.classes
 import com.biryuchenko.room.dao.DocumentDao
 import com.biryuchenko.room.entities.Document
 import com.biryuchenko.room.repository.interfaces.DocumentRepository
-import kotlinx.coroutines.flow.Flow
 
-class OfflineDocumentRepository(val docDao: DocumentDao) : DocumentRepository {
+import kotlinx.coroutines.flow.Flow
+import javax.inject.Inject
+
+class OfflineDocumentRepository @Inject constructor(
+    private val docDao: DocumentDao
+) : DocumentRepository {
     override fun getAllItemsStream(): Flow<List<Document>> {
         return docDao.getAll()
     }
@@ -14,11 +18,11 @@ class OfflineDocumentRepository(val docDao: DocumentDao) : DocumentRepository {
         return docDao.findByName(uid)
     }
 
-    override suspend fun insertCategory(category: Document) {
-        return docDao.insertAll(category)
+    override suspend fun insertDocument(document: Document) {
+        return docDao.insertAll(document)
     }
 
-    override suspend fun deleteItem(category: Document) {
-        return deleteItem(category)
+    override suspend fun deleteItem(document: Document) {
+        return deleteItem(document)
     }
 }

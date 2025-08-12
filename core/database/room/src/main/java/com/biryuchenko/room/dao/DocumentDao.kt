@@ -17,8 +17,8 @@ interface DocumentDao {
     fun findByName(uid: Long): Flow<Document?>
 
     @Insert
-    fun insertAll(vararg document: Document)
+    suspend fun insertAll(vararg document: Document)
 
     @Delete
-    fun delete(document: Document)
+    suspend fun delete(document: Document)
 }

@@ -17,8 +17,8 @@ interface CategoryDao{
     fun findByName(category: String,):Flow<Category>
 
     @Insert
-    fun insertAll(vararg category: Category)
+    suspend fun insertAll(vararg category: Category)
 
     @Delete
-    fun delete(category: Category)
+    suspend  fun delete(category: Category)
 }

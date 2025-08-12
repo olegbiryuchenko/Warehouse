@@ -25,15 +25,19 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
+import com.biryuchenko.room.entities.Category
 
 
 @Composable
 fun CategoryScreen(
     navigateBack: () -> Unit,
+    vm: CategoryViewModel = hiltViewModel(),
 ) {
     Column(
         modifier = Modifier
-            .fillMaxSize(),
+            .fillMaxSize()
+            .padding(10.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         Spacer(Modifier.height(30.dp))
@@ -56,37 +60,45 @@ fun CategoryScreen(
         Spacer(
             Modifier.height(30.dp),
         )
-        Column {
+        Column(
+            horizontalAlignment = Alignment.CenterHorizontally
+        )  {
             Text(
                 "Введите Имя:"
             )
             Spacer(Modifier.height(10.dp))
             OutlinedTextField(
-                value = "",
+                value = vm.category,
                 label = {
                     "Введите Имя:"
                 },
                 placeholder = {
                     Text("Имя")
                 },
-                onValueChange = {}
+                onValueChange = {
+                    vm.category = it
+                }
             )
         }
         Spacer(Modifier.height(30.dp))
-        Column {
+        Column(
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
             Text(
                 "Введите Процент(целое число):"
             )
             Spacer(Modifier.height(10.dp))
             OutlinedTextField(
-                value = "",
+                value = vm.percent,
                 label = {
                     "Введите процент:"
                 },
                 placeholder = {
                     Text("Процент")
                 },
-                onValueChange = {}
+                onValueChange = {
+                    vm.percent = it
+                }
             )
         }
         Box(
@@ -107,7 +119,13 @@ fun CategoryScreen(
                     disabledContentColor = Color(0xFF06923E),
                     disabledContainerColor = Color.White,
                 ),
-                onClick = navigateBack,
+                onClick = {
+                    val percentValue = vm.percent.toIntOrNull()
+                    if (percentValue != null) {
+                        vm.insert(Category(category = vm.category, percent = percentValue))
+                        navigateBack()
+                    }
+                },
             ) {
                 Text(
                     text = "Добавить"

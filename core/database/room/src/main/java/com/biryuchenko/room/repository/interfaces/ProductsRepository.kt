@@ -1,14 +1,17 @@
 package com.biryuchenko.room.repository.interfaces
 
 import com.biryuchenko.room.entities.Product
+import com.biryuchenko.room.entities.ProductWithDocument
 import kotlinx.coroutines.flow.Flow
 
 interface ProductsRepository {
 
-    fun getAllItemsStream(docId: Long): Flow<List<Product>>
+    fun getAllItemsStream(): Flow<List<Product>>
 
-    suspend fun insertCategory(category: Product)
+    fun getProductsWithDocuments(documentId:Long): Flow<List<ProductWithDocument>>
 
-    suspend fun deleteItem(category: Product)
+    suspend fun insertProduct(product: Product)
+
+    suspend fun deleteItem(product: Product)
 
 }

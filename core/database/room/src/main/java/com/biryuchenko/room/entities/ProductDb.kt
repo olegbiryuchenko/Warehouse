@@ -16,7 +16,7 @@ import androidx.room.PrimaryKey
 data class ProductDb(
     @PrimaryKey(autoGenerate = true) val uid: Long = 0,
     @ColumnInfo(name = "name") val name: String,
-    @ColumnInfo(name = "barcode") val barcode: Int,
+    @ColumnInfo(name = "barcode") val barcode: String,
     @ColumnInfo(name = "categoryId") val categoryId: Long,
 )
 

@@ -19,6 +19,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
@@ -31,6 +32,7 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.IconButtonColors
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -46,8 +48,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.lifecycle.viewmodel.compose.viewModel
-import com.biryuchenko.documents.DocumentViewModel
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.biryuchenko.documents.R
 import com.biryuchenko.mlkit.Scanner
 import com.biryuchenko.ui.DeleteAlert
@@ -59,8 +60,11 @@ fun DocumentScreen(
     scanner: Scanner,
     navigate: () -> Unit,
     navigateBack: () -> Unit,
-    vm: DocumentViewModel = viewModel()
+    vm: DocumentDbVm = hiltViewModel(),
+    documentId: Long
 ) {
+    vm.documentId = documentId
+    val products by vm.allProducts.collectAsState()
     val scope = rememberCoroutineScope()
     val context = LocalContext.current
     var wayToAdd by remember { mutableStateOf(false) }
@@ -81,7 +85,7 @@ fun DocumentScreen(
             Spacer(Modifier.width(30.dp))
             // TODO Document name MUST BE THIS
             Text(
-                text = "Document name",
+                text = products[0].document.document,
             )
         }
         Spacer(Modifier.height(20.dp))
@@ -90,7 +94,7 @@ fun DocumentScreen(
                 .fillMaxSize(),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            items(5) {
+            items(products) { product ->
                 val isRotated = remember { mutableStateOf(false) }
 
                 // Анимируем угол поворота
@@ -124,14 +128,14 @@ fun DocumentScreen(
                             modifier = Modifier
                                 .weight(0.6f)
                                 .padding(start = 15.dp, top = 10.dp, bottom = 10.dp),
-                            text = "Снежок мясное ассорти"
+                            text = product.product.name
                         )
                         if (!boxVisible.value) {
                             Text(
                                 modifier = Modifier
                                     .weight(0.3f)
                                     .padding(top = 10.dp, bottom = 10.dp),
-                                text = "1200000"
+                                text = product.product.price.toString()
                             )
                         }
                         //TODO
@@ -179,14 +183,14 @@ fun DocumentScreen(
                             }
                             Column {
                                 Text(
-                                    text = "235 USD"
+                                    text = product.product.price.toString()
                                 )
                                 Spacer(Modifier.height(15.dp))
-                                Text(text = " 1 USD")
+                                Text(text = product.product.priceForOne.toString())
                                 Spacer(Modifier.height(15.dp))
-                                Text(text = "235")
+                                Text(text = product.product.quantity.toString())
                                 Spacer(Modifier.height(15.dp))
-                                Text(text = "Feed")
+                                Text(text = product.product.category)
                                 Spacer(Modifier.height(15.dp))
                             }
                         }
@@ -318,7 +322,7 @@ fun DocumentScreen(
 @Preview(showBackground = true, showSystemUi = true)
 @Composable
 fun Preview() {
-    DocumentScreen(navigate = {}, navigateBack = {}, scanner = Scanner())
+    DocumentScreen(navigate = {}, navigateBack = {}, scanner = Scanner(), documentId = 0)
 }
 
 

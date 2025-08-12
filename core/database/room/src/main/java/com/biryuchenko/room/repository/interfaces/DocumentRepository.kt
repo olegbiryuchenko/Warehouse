@@ -10,8 +10,8 @@ interface DocumentRepository {
 
     fun getItemStream(uid: Long): Flow<Document?>
 
-    suspend fun insertCategory(category: Document)
+    suspend fun insertDocument(document: Document)
 
-    suspend fun deleteItem(category: Document)
+    suspend fun deleteItem(document: Document)
 
 }
