@@ -14,7 +14,7 @@ class OfflineProductsDbRepository @Inject constructor(
         return productsDbDao.getAll()
     }
 
-    override fun getItemStream(barcode: String): Flow<ProductWithCategory?> {
+    override suspend fun getItemStream(barcode: String): ProductWithCategory?{
         return productsDbDao.getProduct(barcode)
     }
 

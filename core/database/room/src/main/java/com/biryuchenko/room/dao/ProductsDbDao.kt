@@ -14,7 +14,7 @@ interface ProductsDbDao {
     fun getAll(): Flow<List<ProductWithCategory>>
 
     @Query("SELECT * FROM productsDb WHERE barcode == :barcode")
-    fun getProduct(barcode: String): Flow<ProductWithCategory?>
+    suspend fun getProduct(barcode: String):ProductWithCategory?
 
     @Insert
     suspend fun insertAll(vararg productDb: ProductDb)

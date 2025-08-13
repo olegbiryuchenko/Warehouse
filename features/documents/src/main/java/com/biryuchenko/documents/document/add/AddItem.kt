@@ -1,5 +1,6 @@
 package com.biryuchenko.documents.document.add
 
+import android.widget.Toast
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -24,11 +25,12 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.SolidColor
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
@@ -48,8 +50,18 @@ import kotlinx.coroutines.launch
 fun AddItemScreen(
     vm: DocumentDbVm = hiltViewModel(),
     navigate: () -> Unit,
+    barcode: String,
+    documentId: Long,
 ) {
+    val context = LocalContext.current
     val scope = rememberCoroutineScope()
+
+    LaunchedEffect(key1 = documentId) {
+        vm.setDocumentId(documentId)
+         vm.findByBarcode(barcode,context)
+    }
+
+
     Column(
         modifier = Modifier
             .fillMaxSize(),
@@ -74,20 +86,26 @@ fun AddItemScreen(
                     )
                 }
                 Spacer(Modifier.width(30.dp))
-                // TODO Document name MUST BE THIS
-                BasicTextField(
-                    value = vm.result!!,
-                    onValueChange = {},
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(vertical = 8.dp),
-                    textStyle = TextStyle(
-                        fontSize = 18.sp,
-                        color = Color.Black
-                    ),
-                    cursorBrush = SolidColor(Color.Green),
-
+                Column {
+                    Text(
+                        text = "Наименование",
+                        fontSize = 10.sp,
+                        color = Color.DarkGray
                     )
+                    BasicTextField(
+                        value = vm.name,
+                        onValueChange = { txt ->
+                            vm.name = txt
+                        },
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(vertical = 8.dp),
+                        textStyle = TextStyle(
+                            fontSize = 18.sp,
+                            color = Color.Black
+                        ),
+                    )
+                }
             }
 
             Spacer(Modifier.height(55.dp))
@@ -121,7 +139,6 @@ fun AddItemScreen(
                             vm.outPriceForOneItem = vm.filter(txt)
                             vm.calculateTotalAmount()
                         }
-
                     )
                 }
             }
@@ -151,7 +168,6 @@ fun AddItemScreen(
                     },
                     value = vm.price,
                     onValueChange = { txt ->
-
                         vm.price = vm.filter(txt)
                         scope.launch {
                             vm.calc()
@@ -216,10 +232,8 @@ fun AddItemScreen(
                     }
                 )
                 Spacer(Modifier.height(10.dp))
-
-
             }
-        }
+        } // <--- Теперь только одна закрывающая скобка
         Box(
             modifier = Modifier
                 .fillMaxWidth()
@@ -238,8 +252,19 @@ fun AddItemScreen(
                     disabledContainerColor = Color.White,
                 ),
                 onClick = {
-            //        roomVm.add(Product(category = ,))
-                    navigate()
+                    scope.launch {
+                        val isSuccess = vm.add()
+                        if (isSuccess) {
+                            navigate()
+                        } else {
+
+                            Toast.makeText(
+                                context,
+                                "Ошибка при добавлении продукта",
+                                Toast.LENGTH_SHORT
+                            ).show()
+                        }
+                    }
                 }
             ) {
                 Text(
@@ -254,5 +279,5 @@ fun AddItemScreen(
 @Preview(showSystemUi = true, showBackground = true)
 @Composable
 fun Preview() {
-    AddItemScreen(navigate = {}, vm = viewModel())
+    AddItemScreen(navigate = {}, vm = viewModel(), barcode = "", documentId = 90)
 }

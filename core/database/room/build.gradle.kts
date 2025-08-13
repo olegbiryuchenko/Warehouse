@@ -43,9 +43,9 @@ dependencies {
     kapt(libs.androidx.hilt.compiler)
 
     // Room
-    implementation(libs.androidx.room.runtime.v270beta01) // Обновленная версия
-    implementation(libs.androidx.room.ktx.v270beta01) // Обновленная версия
-    kapt(libs.androidx.room.compiler.v270beta01) // Компилятор Room для обработки аннотаций
+    implementation(libs.androidx.room.runtime)
+    implementation(libs.androidx.room.ktx)
+    kapt(libs.androidx.room.compiler)
 
     // Kotlin Coroutines
     implementation(libs.kotlinx.coroutines.core)

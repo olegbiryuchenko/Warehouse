@@ -52,7 +52,7 @@ import com.biryuchenko.ui.DeleteAlert
 @Composable
 fun DocumentsScreen(
     addDocument: () -> Unit,
-    navigate: (Long) -> Unit,
+    navigate: (Long,String) -> Unit,
     navigateBack: () -> Unit,
     vm: DocumentsViewModel = hiltViewModel()
 ) {
@@ -97,7 +97,7 @@ fun DocumentsScreen(
                     ),
                     shape = RoundedCornerShape(13),
 
-                    onClick = { navigate(document.uid) }
+                    onClick = { navigate(document.uid,document.document) }
                 ) {
                     Row(
                         modifier = Modifier.fillMaxSize(),
@@ -180,5 +180,5 @@ fun DocumentsScreen(
 @Preview(showBackground = true, showSystemUi = true)
 @Composable
 fun Pr() {
-    DocumentsScreen(navigateBack = {}, navigate = {}, addDocument = {})
+  //  DocumentsScreen(navigateBack = {}, navigate = {b,c ->}, addDocument = {})
 }

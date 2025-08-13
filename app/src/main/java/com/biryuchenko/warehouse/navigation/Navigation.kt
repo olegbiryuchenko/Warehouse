@@ -33,8 +33,8 @@ fun Navigation() {
         composable<DocumentsScreen> {
             DocumentsScreen(
                 addDocument = { navController.navigate(AddDocumentScreen) },
-                navigate = { documentId ->
-                    navController.navigate(DocumentScreen(documentId))
+                navigate = { documentId,documentName->
+                    navController.navigate(DocumentScreen(documentId, documentName))
                 },
                 navigateBack = { navController.popBackStack() })
         }
@@ -42,18 +42,22 @@ fun Navigation() {
             val args = backStackEntry.toRoute<DocumentScreen>()
             DocumentScreen(
                 scanner = scanner,
-                navigate = {
-                    navController.navigate(AddItemScreen)
+                navigate = { barcode,documentId ->
+                    navController.navigate(AddItemScreen(barcode, documentId ))
                 },
                 navigateBack = { navController.popBackStack() },
-                documentId = args.documentId
+                documentId = args.documentId,
+                documentName = args.documentName
             )
         }
-        composable<AddItemScreen> {
+        composable<AddItemScreen> { backStackEntry ->
+            val args = backStackEntry.toRoute<AddItemScreen>()
             AddItemScreen(
                 navigate = {
                     navController.popBackStack()
                 },
+                barcode = args.barcode,
+                documentId = args.documentId
             )
         }
         composable<AddDocumentScreen> {
@@ -102,10 +106,10 @@ object HomeScreen
 object DocumentsScreen
 
 @Serializable
-data class DocumentScreen(val documentId: Long)
+data class DocumentScreen(val documentId: Long, val documentName: String)
 
 @Serializable
-object AddItemScreen
+data class AddItemScreen(val barcode: String,val documentId: Long)
 
 @Serializable
 object AddDocumentScreen

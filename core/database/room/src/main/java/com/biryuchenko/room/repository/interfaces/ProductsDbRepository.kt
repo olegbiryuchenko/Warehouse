@@ -7,7 +7,7 @@ import kotlinx.coroutines.flow.Flow
 interface ProductsDbRepository {
     fun getAllItemsStream(): Flow<List<ProductWithCategory>>
 
-    fun getItemStream(barcode: String): Flow<ProductWithCategory?>
+    suspend fun getItemStream(barcode: String): ProductWithCategory?
 
     suspend fun insertCategory(productDb: ProductDb)
 

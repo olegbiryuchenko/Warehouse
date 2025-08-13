@@ -1,22 +1,27 @@
 package com.biryuchenko.documents.document
 
+import android.content.Context
+import android.util.Log
+import android.widget.Toast
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableLongStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.biryuchenko.calculate.Calculator
 import com.biryuchenko.room.entities.Product
-import com.biryuchenko.room.entities.ProductWithCategory
 import com.biryuchenko.room.entities.ProductWithDocument
 import com.biryuchenko.room.repository.interfaces.ProductsDbRepository
 import com.biryuchenko.room.repository.interfaces.ProductsRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.filterNotNull
+import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -28,48 +33,97 @@ class DocumentDbVm @Inject constructor(
 ) : ViewModel() {
 
     var name by mutableStateOf("")
-    var category by mutableStateOf("Unspecified")
-    var categoryId by mutableLongStateOf(0)
-    var documentId by mutableLongStateOf(0)
-    val allProducts: StateFlow<List<ProductWithDocument>> =
-        products.getProductsWithDocuments(documentId = documentId)
-            .stateIn(
-                scope = viewModelScope,
-                started = SharingStarted.WhileSubscribed(5_000),
-                initialValue = emptyList()
-            )
+    var category by mutableStateOf("")
 
-    fun findByBarcode(barcode: String): Flow<ProductWithCategory?> {
-        return productsDb.getItemStream(barcode)
+    private val documentId = MutableStateFlow<Long?>(null)
+
+    fun setDocumentId(id: Long) {
+        documentId.value = id
     }
 
+    @OptIn(ExperimentalCoroutinesApi::class)
+    val allProducts: StateFlow<List<ProductWithDocument>> =
+        documentId.filterNotNull().flatMapLatest { id ->
+            products.getProductsWithDocuments(documentId = id)
+        }.stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.WhileSubscribed(5_000),
+            initialValue = emptyList()
+        )
 
-    fun add() {
-
+    fun findByBarcode(barcode: String, context: Context) {
         viewModelScope.launch {
             try {
-                products.insertProduct(
-                    Product(
-                        category = category,
-                        name = name,
-                        price = price.toInt(),
-                        priceForOne = outPriceForOneItem.toInt(),
-                        documentId = categoryId,
-                        quantity = quantity.toInt(),
-                    )
-                )
-            } catch (e: Exception) {
+                val productWithCategory = productsDb.getItemStream(barcode)
 
+                if (productWithCategory != null) {
+
+                    category = productWithCategory.categoryDetails.category
+                    percent = productWithCategory.categoryDetails.percent.toString()
+                    name = productWithCategory.product.name
+                } else {
+                    category = "Unspecified"
+                    percent = ""
+                    Toast.makeText(
+                        context,
+                        "Штрих-код не найден или неправильно считан",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                    println("Product with barcode $barcode not found.")
+                }
+            } catch (e: Exception) {
+                Toast.makeText(
+                    context,
+                    e.message.toString(),
+                    Toast.LENGTH_SHORT
+                ).show()
+                Log.e("findByBarcode", "An error occurred: ${e.message}", e)
+                category = "Unspecified"
             }
         }
     }
 
-    fun delete(product: Product) {
+    val totalPrice: StateFlow<Int> = allProducts.map { products ->
+        products.sumOf { it.product.price }
+    }.stateIn(
+        scope = viewModelScope,
+        started = SharingStarted.WhileSubscribed(5_000),
+        initialValue = 0
+    )
+
+    suspend fun add(): Boolean {
+        if (
+            documentId.value == null || name.isEmpty() || category.isEmpty()
+            || outPrice.isEmpty() || outPriceForOneItem.isEmpty() || quantity.isEmpty()
+        ) {
+            return false
+        }
+
+        return try {
+            products.insertProduct(
+                Product(
+                    category = category,
+                    name = name,
+                    price = outPrice.toInt(),
+                    priceForOne = outPriceForOneItem.toInt(),
+                    documentId = documentId.value!!,
+                    quantity = quantity.toInt(),
+                )
+            )
+            true
+        } catch (e: Exception) {
+
+            Log.e("DocumentDbVm", "Failed to add product: ${e.message}", e)
+            false
+        }
+    }
+
+    fun delete(product: Product, context: Context) {
         viewModelScope.launch {
             try {
                 products.deleteItem(product)
             } catch (e: Exception) {
-                println(e)
+                Toast.makeText(context, e.toString(), Toast.LENGTH_LONG).show()
             }
         }
     }
@@ -87,40 +141,27 @@ class DocumentDbVm @Inject constructor(
 
     suspend fun calc() {
         delay(300)
-        if (
-            price.toDoubleOrNull() == null ||
-            percent.toIntOrNull() == null ||
-            quantity.toIntOrNull() == null
-        ) {
+        if (price.toDoubleOrNull() == null || percent.toIntOrNull() == null || quantity.toIntOrNull() == null) {
             return
         }
         output = calculator.calc(
-            price.toDouble(),
-            quantity.toInt(),
-            percent.toInt()
+            price.toDouble(), quantity.toInt(), percent.toInt()
         )
         outPrice = output.second.toString()
         outPriceForOneItem = output.first.toString()
     }
 
     fun calculateTotalAmount() {
-        if (
-            outPriceForOneItem.toDoubleOrNull() == null ||
-            quantity.toIntOrNull() == null
-        ) {
+        if (outPriceForOneItem.toDoubleOrNull() == null || quantity.toIntOrNull() == null) {
             return
         }
-        val price =
-            calculator.calculateTotalAmount(outPriceForOneItem.toDouble(), quantity.toInt())
-                .toString()
+        val price = calculator.calculateTotalAmount(outPriceForOneItem.toDouble(), quantity.toInt())
+            .toString()
         outPrice = price
     }
 
     fun calculatePricePerUnit() {
-        if (
-            outPrice.toDoubleOrNull() == null ||
-            quantity.toIntOrNull() == null
-        ) {
+        if (outPrice.toDoubleOrNull() == null || quantity.toIntOrNull() == null) {
             return
         }
         val price =

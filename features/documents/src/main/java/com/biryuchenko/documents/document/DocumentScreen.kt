@@ -32,6 +32,7 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.IconButtonColors
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -51,6 +52,7 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.biryuchenko.documents.R
 import com.biryuchenko.mlkit.Scanner
+import com.biryuchenko.room.entities.Product
 import com.biryuchenko.ui.DeleteAlert
 import kotlinx.coroutines.launch
 
@@ -58,17 +60,22 @@ import kotlinx.coroutines.launch
 @Composable
 fun DocumentScreen(
     scanner: Scanner,
-    navigate: () -> Unit,
+    navigate: (String, Long) -> Unit,
     navigateBack: () -> Unit,
     vm: DocumentDbVm = hiltViewModel(),
-    documentId: Long
+    documentId: Long,
+    documentName: String,
 ) {
-    vm.documentId = documentId
+    LaunchedEffect(key1 = documentId) {
+        vm.setDocumentId(documentId)
+    }
+    var onDelete: Product by remember { mutableStateOf(Product(0, ",", "", 0, 0, 0, 0)) }
     val products by vm.allProducts.collectAsState()
     val scope = rememberCoroutineScope()
     val context = LocalContext.current
     var wayToAdd by remember { mutableStateOf(false) }
     var openDialog by remember { mutableStateOf(false) }
+    val totalPrice by vm.totalPrice.collectAsState()
     Column(
         Modifier.fillMaxSize()
     ) {
@@ -85,7 +92,7 @@ fun DocumentScreen(
             Spacer(Modifier.width(30.dp))
             // TODO Document name MUST BE THIS
             Text(
-                text = products[0].document.document,
+                text = documentName,
             )
         }
         Spacer(Modifier.height(20.dp))
@@ -140,7 +147,10 @@ fun DocumentScreen(
                         }
                         //TODO
                         IconButton(
-                            onClick = { openDialog = true }
+                            onClick = {
+                                openDialog = true
+                                onDelete = product.product
+                            }
                         ) {
                             Icon(
                                 imageVector = Icons.Outlined.DeleteOutline,
@@ -219,7 +229,7 @@ fun DocumentScreen(
                     )
                     Text(
                         fontSize = 18.sp,
-                        text = "125000"
+                        text = totalPrice.toString()
                     )
                 }
             }
@@ -246,7 +256,7 @@ fun DocumentScreen(
                         scope.launch {
                             vm.result = scanner.startBarcodeScanSuspend(context)
                             if (vm.result != null) {
-                                navigate()
+                                navigate(vm.result!!, documentId)
                             } else {
                                 Toast.makeText(context, "Cancelled", Toast.LENGTH_SHORT).show()
                             }
@@ -266,7 +276,7 @@ fun DocumentScreen(
                         disabledContentColor = Color.White,
                         disabledContainerColor = Color(0xff464e5d),
                     ),
-                    onClick = navigate
+                    onClick = { navigate("", documentId) }
 
 
                 ) {
@@ -311,7 +321,13 @@ fun DocumentScreen(
                 openDialog = false
                 Toast.makeText(context, "Отмена", Toast.LENGTH_SHORT).show()
             },
-            onConfirm = { openDialog = false },
+            onConfirm = {
+                openDialog = false
+                vm.delete(
+                    onDelete,
+                    context
+                )
+            },
             onDismiss = { openDialog = false },
         )
     }
@@ -322,7 +338,13 @@ fun DocumentScreen(
 @Preview(showBackground = true, showSystemUi = true)
 @Composable
 fun Preview() {
-    DocumentScreen(navigate = {}, navigateBack = {}, scanner = Scanner(), documentId = 0)
+//    DocumentScreen(
+//        navigate = {},
+//        navigateBack = {},
+//        scanner = Scanner(),
+//        documentId = 0,
+//        documentName = ""
+//    )
 }
 
 

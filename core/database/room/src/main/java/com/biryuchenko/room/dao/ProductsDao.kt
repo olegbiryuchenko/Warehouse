@@ -18,8 +18,8 @@ interface ProductsDao {
     fun getProductsWithDocuments(documentId: Long): Flow<List<ProductWithDocument>>
 
     @Insert
-    fun insertAll(vararg product: Product)
+    suspend fun insertAll(vararg product: Product)
 
     @Delete
-    fun delete(product: Product)
+    suspend fun delete(product: Product)
 }
