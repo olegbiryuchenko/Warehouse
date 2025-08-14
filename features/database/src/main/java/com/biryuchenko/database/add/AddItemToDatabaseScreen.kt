@@ -1,6 +1,6 @@
 package com.biryuchenko.database.add
 
-import androidx.compose.foundation.horizontalScroll
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -13,7 +13,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
@@ -26,7 +25,9 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -43,8 +44,9 @@ fun AddItemToDatabaseScreen(
     vm: DatabaseVM = hiltViewModel(),
     barcode: String,
 ) {
+    val context = LocalContext.current
     val categories by vm.allCategories.collectAsState()
-
+    var selectedCategoryId by remember { mutableStateOf<Long?>(null) }
 
     Column(
         Modifier.fillMaxSize(),
@@ -82,6 +84,7 @@ fun AddItemToDatabaseScreen(
                 modifier = Modifier.fillMaxWidth(),
                 value = barcode,
                 readOnly = true,
+                singleLine = true,
                 onValueChange = {})
             Spacer(Modifier.height(10.dp))
             Text(
@@ -101,14 +104,17 @@ fun AddItemToDatabaseScreen(
         ) {
             items(categories) { category ->
 
+                val isSelected = selectedCategoryId == category.uid
+
                 Spacer(Modifier.width(10.dp))
                 Button(
                     colors = ButtonColors(
-                        containerColor = Color(0xFFE67514),
-                        contentColor = Color.White,
-                        disabledContentColor = Color(0xFFE67514),
+                        containerColor = if (isSelected) Color(0xFF06923E) else Color.White,
+                        contentColor = if (isSelected) Color.White else Color(0xFF06923E),
+                        disabledContentColor = Color(0xFF06923E),
                         disabledContainerColor = Color.White
                     ), onClick = {
+                        selectedCategoryId = category.uid
                         vm.categoryId = category.uid
                         vm.category = category.category
                     }) {
@@ -137,7 +143,7 @@ fun AddItemToDatabaseScreen(
                     disabledContainerColor = Color.White,
                 ),
                 onClick = {
-                    vm.add(barcode)
+                    vm.add(barcode, context = context)
                     navigate()
                 },
             ) {

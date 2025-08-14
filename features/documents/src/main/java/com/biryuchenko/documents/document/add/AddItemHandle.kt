@@ -12,6 +12,8 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
@@ -26,7 +28,12 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -36,29 +43,26 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.biryuchenko.documents.R
 import com.biryuchenko.documents.document.DocumentDbVm
 import kotlinx.coroutines.launch
 
-
 @Composable
-fun AddItemScreen(
+fun AddItemScreenHandle(
     vm: DocumentDbVm = hiltViewModel(),
     navigate: () -> Unit,
-    barcode: String,
     documentId: Long,
 ) {
+
+    val categories by vm.allCategories.collectAsState()
     val context = LocalContext.current
     val scope = rememberCoroutineScope()
-
+    var selectedCategoryId by remember { mutableStateOf<Long?>(null) }
     LaunchedEffect(key1 = documentId) {
         vm.setDocumentId(documentId)
-         vm.findByBarcode(barcode,context)
     }
 
 
@@ -72,7 +76,7 @@ fun AddItemScreen(
             modifier = Modifier.fillMaxWidth(),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Spacer(Modifier.height(30.dp))
+            Spacer(Modifier.height(20.dp))
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 verticalAlignment = Alignment.CenterVertically
@@ -109,7 +113,7 @@ fun AddItemScreen(
                 }
             }
 
-            Spacer(Modifier.height(55.dp))
+            Spacer(Modifier.height(35.dp))
             Row(
                 modifier = Modifier
                     .horizontalScroll(rememberScrollState())
@@ -145,9 +149,38 @@ fun AddItemScreen(
             }
             Column(
                 modifier = Modifier
-                    .padding(top = 50.dp, start = 30.dp, end = 30.dp)
+                    .padding( start = 30.dp, end = 30.dp)
                     .fillMaxWidth()
             ) {
+                Spacer(Modifier.height(10.dp))
+                LazyRow(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                ) {
+                    items(categories) { category ->
+
+                        val isSelected = selectedCategoryId == category.uid
+
+                        Spacer(Modifier.width(10.dp))
+                        Button(
+                            colors = ButtonColors(
+                                containerColor = if (isSelected) Color(0xFF06923E) else Color.White,
+                                contentColor = if (isSelected) Color.White else Color(0xFF06923E),
+                                disabledContentColor = Color(0xFF06923E),
+                                disabledContainerColor = Color.White
+                            ), onClick = {
+                                selectedCategoryId = category.uid
+                                vm.categoryId = category.uid
+                                vm.category = category.category
+                                vm.percent = category.percent.toString()
+                            }) {
+                            Text(category.category)
+                        }
+                        Spacer(Modifier.width(10.dp))
+                        Spacer(Modifier.height(20.dp))
+                    }
+                }
+                Spacer(Modifier.height(10.dp))
                 Text(
                     modifier = Modifier.fillMaxWidth(),
                     textAlign = TextAlign.Start,
@@ -234,7 +267,7 @@ fun AddItemScreen(
                 )
                 Spacer(Modifier.height(10.dp))
             }
-        } // <--- Теперь только одна закрывающая скобка
+        }
         Box(
             modifier = Modifier
                 .fillMaxWidth()
@@ -258,7 +291,6 @@ fun AddItemScreen(
                         if (isSuccess) {
                             navigate()
                         } else {
-
                             Toast.makeText(
                                 context,
                                 "Ошибка при добавлении продукта",
@@ -274,11 +306,4 @@ fun AddItemScreen(
             }
         }
     }
-}
-
-
-@Preview(showSystemUi = true, showBackground = true)
-@Composable
-fun Preview() {
-    AddItemScreen(navigate = {}, vm = viewModel(), barcode = "", documentId = 90)
 }

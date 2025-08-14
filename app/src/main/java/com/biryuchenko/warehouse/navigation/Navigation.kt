@@ -9,6 +9,7 @@ import com.biryuchenko.database.DatabaseScreen
 import com.biryuchenko.database.add.AddItemToDatabaseScreen
 import com.biryuchenko.documents.document.DocumentScreen
 import com.biryuchenko.documents.document.add.AddItemScreen
+import com.biryuchenko.documents.document.add.AddItemScreenHandle
 import com.biryuchenko.documents.menu.DocumentsScreen
 import com.biryuchenko.documents.menu.add.AddDocumentScreen
 import com.biryuchenko.home.HomeScreen
@@ -33,7 +34,7 @@ fun Navigation() {
         composable<DocumentsScreen> {
             DocumentsScreen(
                 addDocument = { navController.navigate(AddDocumentScreen) },
-                navigate = { documentId,documentName->
+                navigate = { documentId, documentName ->
                     navController.navigate(DocumentScreen(documentId, documentName))
                 },
                 navigateBack = { navController.popBackStack() })
@@ -42,8 +43,12 @@ fun Navigation() {
             val args = backStackEntry.toRoute<DocumentScreen>()
             DocumentScreen(
                 scanner = scanner,
-                navigate = { barcode,documentId ->
-                    navController.navigate(AddItemScreen(barcode, documentId ))
+                navigate = { barcode, documentId ->
+                    if (barcode.isEmpty()) {
+                        navController.navigate(AddItemScreenHandle(documentId))
+                    } else {
+                        navController.navigate(AddItemScreen(barcode, documentId))
+                    }
                 },
                 navigateBack = { navController.popBackStack() },
                 documentId = args.documentId,
@@ -57,6 +62,15 @@ fun Navigation() {
                     navController.popBackStack()
                 },
                 barcode = args.barcode,
+                documentId = args.documentId
+            )
+        }
+        composable<AddItemScreenHandle> { backStackEntry ->
+            val args = backStackEntry.toRoute<AddItemScreenHandle>()
+            AddItemScreenHandle(
+                navigate = {
+                    navController.popBackStack()
+                },
                 documentId = args.documentId
             )
         }
@@ -109,7 +123,10 @@ object DocumentsScreen
 data class DocumentScreen(val documentId: Long, val documentName: String)
 
 @Serializable
-data class AddItemScreen(val barcode: String,val documentId: Long)
+data class AddItemScreen(val barcode: String, val documentId: Long)
+
+@Serializable
+data class AddItemScreenHandle(val documentId: Long)
 
 @Serializable
 object AddDocumentScreen

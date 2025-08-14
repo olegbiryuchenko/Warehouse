@@ -17,13 +17,9 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonColors
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -35,8 +31,6 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.biryuchenko.documents.R
 import com.biryuchenko.documents.menu.DocumentsViewModel
-import com.biryuchenko.room.entities.Document
-import java.sql.Date
 
 @Composable
 fun AddDocumentScreen(
@@ -80,7 +74,7 @@ fun AddDocumentScreen(
                 text = stringResource(R.string.inputDocumentName)
             )
             Spacer(Modifier.height(10.dp))
-            TextField(
+            OutlinedTextField(
                 modifier = Modifier.width(290.dp),
                 placeholder = {
                     Text(
@@ -92,6 +86,7 @@ fun AddDocumentScreen(
                         text = stringResource(R.string.inputDocumentName)
                     )
                 },
+                singleLine = true,
                 value = vm.text,
                 supportingText = {
                     Text(text = "${vm.text.length}/$maxLength")

@@ -90,7 +90,6 @@ fun DocumentScreen(
                 Icon(imageVector = Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")
             }
             Spacer(Modifier.width(30.dp))
-            // TODO Document name MUST BE THIS
             Text(
                 text = documentName,
             )
@@ -137,6 +136,7 @@ fun DocumentScreen(
                                 .padding(start = 15.dp, top = 10.dp, bottom = 10.dp),
                             text = product.product.name
                         )
+                        Spacer(Modifier.width(10.dp))
                         if (!boxVisible.value) {
                             Text(
                                 modifier = Modifier
@@ -180,28 +180,54 @@ fun DocumentScreen(
                             horizontalArrangement = Arrangement.SpaceBetween
                         ) {
                             Column {
-                                Text(
-                                    text = "Output Price:"
-                                )
-                                Spacer(Modifier.height(15.dp))
-                                Text(text = "Output Price For One: ")
-                                Spacer(Modifier.height(15.dp))
-                                Text(text = "Count: ")
-                                Spacer(Modifier.height(15.dp))
-                                Text(text = "Category:")
-                                Spacer(Modifier.height(15.dp))
-                            }
-                            Column {
-                                Text(
-                                    text = product.product.price.toString()
-                                )
-                                Spacer(Modifier.height(15.dp))
-                                Text(text = product.product.priceForOne.toString())
-                                Spacer(Modifier.height(15.dp))
-                                Text(text = product.product.quantity.toString())
-                                Spacer(Modifier.height(15.dp))
-                                Text(text = product.product.category)
-                                Spacer(Modifier.height(15.dp))
+                                Row {
+                                    Text(
+                                        modifier = Modifier.weight(0.5f),
+                                        text = "Output Price:"
+                                    )
+                                    Spacer(Modifier.width(20.dp))
+                                    Text(
+                                        modifier = Modifier.weight(0.4f),
+                                        text = product.product.price.toString()
+                                    )
+                                }
+                                Spacer(Modifier.height(20.dp))
+                                Row {
+                                    Text(
+                                        modifier = Modifier.weight(0.5f),
+                                        text = "Output Price For One: "
+                                    )
+                                    Spacer(Modifier.width(20.dp))
+                                    Text(
+                                        modifier = Modifier.weight(0.4f),
+                                        text = product.product.priceForOne.toString()
+                                    )
+                                }
+                                Spacer(Modifier.height(20.dp))
+                                Row {
+                                    Text(
+                                        modifier = Modifier.weight(0.5f),
+                                        text = "Count: "
+                                    )
+                                    Spacer(Modifier.width(20.dp))
+                                    Text(
+                                        modifier = Modifier.weight(0.4f),
+                                        text = product.product.quantity.toString()
+                                    )
+                                }
+                                Spacer(Modifier.height(20.dp))
+                                Row {
+                                    Text(
+                                        modifier = Modifier.weight(0.5f),
+                                        text = "Category:"
+                                    )
+                                    Spacer(Modifier.width(20.dp))
+                                    Text(
+                                        modifier = Modifier.weight(0.4f),
+                                        text = product.product.category
+                                    )
+                                }
+                                Spacer(Modifier.height(20.dp))
                             }
                         }
                     }
@@ -232,6 +258,7 @@ fun DocumentScreen(
                         text = totalPrice.toString()
                     )
                 }
+                Spacer(Modifier.height(35.dp))
             }
         }
     }

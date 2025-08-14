@@ -1,5 +1,6 @@
 package com.biryuchenko.home
 
+import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -19,6 +20,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 
@@ -29,6 +31,7 @@ fun HomeScreen(
     navigateSettingsScreen: () -> Unit,
 
     ) {
+    val context = LocalContext.current
     Column(
         modifier = Modifier
             .background(color = Color(0xFF121212))
@@ -40,7 +43,9 @@ fun HomeScreen(
                 .fillMaxWidth()
         ) {
             Button(
-                modifier = Modifier.size(200.dp, 150.dp),
+                modifier = Modifier
+                    .height(150.dp)
+                    .weight(0.5f),
                 colors = ButtonColors(
                     containerColor = Color(0xFF06923E),
                     contentColor = Color.White,
@@ -61,7 +66,9 @@ fun HomeScreen(
                     .width(14.dp)
             )
             Button(
-                modifier = Modifier.size(171.dp, 150.dp), colors = ButtonColors(
+                modifier = Modifier
+                    .height(150.dp)
+                    .weight(0.4f), colors = ButtonColors(
                     containerColor = Color(0xFFE67514),
                     contentColor = Color.White,
                     disabledContentColor = Color(0xFFE67514),
@@ -91,7 +98,9 @@ fun HomeScreen(
                     disabledContentColor = Color(0xFFD3ECCD),
                     disabledContainerColor = Color.White
                 ),
-                shape = RoundedCornerShape(10), onClick = {}) {
+                shape = RoundedCornerShape(10), onClick = {
+                    Toast.makeText(context,"not yet implemented", Toast.LENGTH_SHORT).show()
+                }) {
 
             }
             Spacer(

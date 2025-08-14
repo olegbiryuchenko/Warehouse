@@ -1,6 +1,7 @@
 package com.biryuchenko.documents.menu
 
 
+import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -46,7 +47,7 @@ class DocumentsViewModel @Inject constructor(
             try {
                 documents.deleteItem(document)
             } catch (e: Exception) {
-                println(e)
+                Log.e("DocumentsViewModel", "Error deleting document: ${e.message}", e)
             }
         }
     }

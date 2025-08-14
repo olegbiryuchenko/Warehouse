@@ -159,87 +159,113 @@ fun DatabaseScreen(
                             horizontalArrangement = Arrangement.SpaceBetween
                         ) {
                             Column {
-                                Text(
-                                    text = "Name:"
-                                )
-                                Spacer(Modifier.height(15.dp))
-                                Text(text = "BarCode: ")
-                                Spacer(Modifier.height(15.dp))
-                                Text(text = "Category: ")
-                                Spacer(Modifier.height(15.dp))
-                            }
-                            Column {
-                                Text(
-                                    text = product.product.name
-                                )
-                                Spacer(Modifier.height(15.dp))
-                                Text(text = product.product.barcode)
-                                Spacer(Modifier.height(15.dp))
-                                Text(text = product.categoryDetails.category)
-                                Spacer(Modifier.height(15.dp))
+                                Row {
+                                    Text(
+                                        modifier = Modifier.weight(0.3f),
+                                        text = "Name:"
+                                    )
+                                    Spacer(Modifier.width(20.dp))
+                                    Text(
+                                        modifier = Modifier.weight(0.6f),
+                                        text = product.product.name
+                                    )
+                                }
+                                Spacer(Modifier.height(20.dp))
+                                Row {
+                                    Text(
+                                        modifier = Modifier.weight(0.3f),
+                                        text = "BarCode: "
+                                    )
+                                    Spacer(Modifier.width(20.dp))
+                                    Text(
+                                        modifier = Modifier.weight(0.6f),
+                                        text = product.product.barcode
+                                    )
+                                }
+                                Spacer(Modifier.height(20.dp))
+                                Row {
+                                    Text(
+                                        modifier = Modifier.weight(0.3f),
+                                        text = "Category: "
+                                    )
+                                    Spacer(Modifier.width(20.dp))
+                                    Text(
+                                        modifier = Modifier.weight(0.6f),
+                                        text = product.categoryDetails.category
+                                    )
+                                }
+                                Spacer(Modifier.height(20.dp))
                             }
                         }
                     }
+                    Spacer(Modifier.height(10.dp))
                 }
-                Spacer(Modifier.height(10.dp))
             }
         }
-    }
 
-    Box(
-        modifier = Modifier
-            .padding(bottom = 70.dp, end = 50.dp)
-            .fillMaxSize(),
-        contentAlignment = Alignment.BottomEnd
-    ) {
-        IconButton(
-            modifier = Modifier.size(48.dp),
-            colors = IconButtonColors(
-                contentColor = Color.White,
-                containerColor = Color(0xFF06923E),
-                disabledContentColor = Color.White,
-                disabledContainerColor = Color(0xFF06923E),
-            ),
-            onClick = {
-                scope.launch {
-                    val result = scanner.startBarcodeScanSuspend(context)
-                    if (result != null) {
-                        navigate(result)
-                    } else {
-                        Toast.makeText(context, "Cancelled", Toast.LENGTH_SHORT).show()
+        Box(
+            modifier = Modifier
+                .padding(bottom = 70.dp, end = 50.dp)
+                .fillMaxSize(),
+            contentAlignment = Alignment.BottomEnd
+        ) {
+            IconButton(
+                modifier = Modifier.size(48.dp),
+                colors = IconButtonColors(
+                    contentColor = Color.White,
+                    containerColor = Color(0xFF06923E),
+                    disabledContentColor = Color.White,
+                    disabledContainerColor = Color(0xFF06923E),
+                ),
+                onClick = {
+                    scope.launch {
+                        val result = scanner.startBarcodeScanSuspend(context)
+                        if (result != null) {
+                            if (vm.inspect(result)) {
+                                navigate(result)
+                            } else {
+                                Toast.makeText(
+                                    context,
+                                    "Товар с таким же штрих-кодом уже существует",
+                                    Toast.LENGTH_LONG
+                                ).show()
+                            }
+                        } else {
+                            Toast.makeText(context, "Cancelled", Toast.LENGTH_SHORT).show()
+                        }
                     }
                 }
+
+            ) {
+                Icon(imageVector = Icons.Default.Add, contentDescription = "Add document")
             }
-
-        ) {
-            Icon(imageVector = Icons.Default.Add, contentDescription = "Add document")
         }
-    }
-    AnimatedVisibility(
-        visible = openDialog
-    ) {
-        DeleteAlert(
-            title = "Удалить документ",
-            text = "Вы дейсвительно хотите удалить этот документ?",
-            onDismissRequest = {
-                openDialog = false
-                Toast.makeText(context, "Отмена", Toast.LENGTH_SHORT).show()
-            },
-            onConfirm = {
-                openDialog = false
-                vm.delete(
-                    onDelete
-                )
-            },
-            onDismiss = { openDialog = false },
-        )
-    }
+        AnimatedVisibility(
+            visible = openDialog
+        ) {
+            DeleteAlert(
+                title = "Удалить документ",
+                text = "Вы дейсвительно хотите удалить этот документ?",
+                onDismissRequest = {
+                    openDialog = false
+                    Toast.makeText(context, "Отмена", Toast.LENGTH_SHORT).show()
+                },
+                onConfirm = {
+                    openDialog = false
+                    vm.delete(
+                        onDelete
+                    )
+                },
+                onDismiss = { openDialog = false },
+            )
+        }
 
+    }
 }
 
 
-@Preview(showBackground = true, showSystemUi = true)
-@Composable
-fun Preview() {
-    DatabaseScreen(navigate = {}, navigateBack = {}, vm = viewModel(), scanner = Scanner())
-}
+    @Preview(showBackground = true, showSystemUi = true)
+    @Composable
+    fun Preview() {
+        DatabaseScreen(navigate = {}, navigateBack = {}, vm = viewModel(), scanner = Scanner())
+    }

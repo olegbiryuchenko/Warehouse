@@ -23,6 +23,6 @@ class OfflineDocumentRepository @Inject constructor(
     }
 
     override suspend fun deleteItem(document: Document) {
-        return deleteItem(document)
+        return docDao.delete(document)
     }
 }

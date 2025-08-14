@@ -1,5 +1,8 @@
 package com.biryuchenko.database
 
+import android.content.Context
+import android.util.Log
+import android.widget.Toast
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableLongStateOf
 import androidx.compose.runtime.mutableStateOf
@@ -43,19 +46,26 @@ class DatabaseVM @Inject constructor(
                 initialValue = emptyList()
             )
 
-    fun add(barcode: String) {
+    suspend fun inspect(barcode: String): Boolean {
+
+        val existingProduct = databaseRepository.getItemStream(barcode)?.product?.barcode?.isEmpty()
+
+        return existingProduct == null
+    }
+    fun add(barcode: String,context: Context) {
         viewModelScope.launch {
-            try {
-                databaseRepository.insertCategory(
-                    ProductDb(
-                        name = name,
-                        barcode = barcode,
-                        categoryId = categoryId
-                    )
-                )
-            } catch (e: Exception) {
-                println(e)
-            }
+              try {
+                  databaseRepository.insertCategory(
+                      ProductDb(
+                          name = name,
+                          barcode = barcode,
+                          categoryId = categoryId
+                      )
+                  )
+              } catch (e: Exception) {
+                  Toast.makeText(context,"Something went wrong", Toast.LENGTH_LONG).show()
+                  Log.e("DatabaseError", "Failed to insert product", e)
+              }
         }
     }
 

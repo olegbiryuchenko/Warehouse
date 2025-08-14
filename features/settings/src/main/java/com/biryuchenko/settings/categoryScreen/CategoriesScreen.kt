@@ -63,7 +63,7 @@ fun CategoriesScreen(
                 Modifier.width(30.dp),
             )
             Text(
-                text = "Settings",
+                text = "Категории",
             )
         }
         Spacer(

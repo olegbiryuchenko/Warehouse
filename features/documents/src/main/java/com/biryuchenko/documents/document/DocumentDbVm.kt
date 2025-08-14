@@ -4,13 +4,16 @@ import android.content.Context
 import android.util.Log
 import android.widget.Toast
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableLongStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.biryuchenko.calculate.Calculator
+import com.biryuchenko.room.entities.Category
 import com.biryuchenko.room.entities.Product
 import com.biryuchenko.room.entities.ProductWithDocument
+import com.biryuchenko.room.repository.interfaces.CategoryRepository
 import com.biryuchenko.room.repository.interfaces.ProductsDbRepository
 import com.biryuchenko.room.repository.interfaces.ProductsRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -30,6 +33,7 @@ import javax.inject.Inject
 class DocumentDbVm @Inject constructor(
     private val products: ProductsRepository,
     private val productsDb: ProductsDbRepository,
+    private val categoryRepository: CategoryRepository,
 ) : ViewModel() {
 
     var name by mutableStateOf("")
@@ -50,6 +54,14 @@ class DocumentDbVm @Inject constructor(
             started = SharingStarted.WhileSubscribed(5_000),
             initialValue = emptyList()
         )
+    var categoryId by mutableLongStateOf(0)
+    val allCategories: StateFlow<List<Category>> =
+        categoryRepository.getAllItemsStream()
+            .stateIn(
+                scope = viewModelScope,
+                started = SharingStarted.WhileSubscribed(5_000),
+                initialValue = emptyList()
+            )
 
     fun findByBarcode(barcode: String, context: Context) {
         viewModelScope.launch {

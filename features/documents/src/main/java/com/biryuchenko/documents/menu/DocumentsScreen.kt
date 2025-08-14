@@ -45,21 +45,20 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.biryuchenko.documents.R
 import com.biryuchenko.room.entities.Document
-import com.biryuchenko.room.entities.ProductDb
 import com.biryuchenko.ui.DeleteAlert
 
 
 @Composable
 fun DocumentsScreen(
     addDocument: () -> Unit,
-    navigate: (Long,String) -> Unit,
+    navigate: (Long, String) -> Unit,
     navigateBack: () -> Unit,
     vm: DocumentsViewModel = hiltViewModel()
 ) {
     val documents by vm.allDocuments.collectAsState()
     val context = LocalContext.current
     var openDialog by remember { mutableStateOf(false) }
-    var documentToDelete by remember { mutableStateOf<Document?>(null) }
+    var documentToDelete by remember { mutableStateOf(Document(0,"",0)) }
     Column(
         Modifier.fillMaxSize()
     ) {
@@ -97,7 +96,7 @@ fun DocumentsScreen(
                     ),
                     shape = RoundedCornerShape(13),
 
-                    onClick = { navigate(document.uid,document.document) }
+                    onClick = { navigate(document.uid, document.document) }
                 ) {
                     Row(
                         modifier = Modifier.fillMaxSize(),
@@ -161,15 +160,20 @@ fun DocumentsScreen(
     ) {
         DeleteAlert(
             title = "Удалить документ",
-            text = "Вы дейсвительно хотите удалить " + documentToDelete?.document,
+            text = "Вы дейсвительно хотите удалить " + documentToDelete.document,
             onDismissRequest = {
                 openDialog = false
                 Toast.makeText(context, "Отмена", Toast.LENGTH_SHORT).show()
             },
             onConfirm = {
                 openDialog = false
-                documentToDelete?.let { vm.delete(it) }
-                documentToDelete = null
+                vm.delete(
+                    Document(
+                        uid = documentToDelete.uid,
+                        document = documentToDelete.document,
+                        date = documentToDelete.date
+                    )
+                )
             },
             onDismiss = { openDialog = false },
         )
@@ -180,5 +184,5 @@ fun DocumentsScreen(
 @Preview(showBackground = true, showSystemUi = true)
 @Composable
 fun Pr() {
-  //  DocumentsScreen(navigateBack = {}, navigate = {b,c ->}, addDocument = {})
+    //  DocumentsScreen(navigateBack = {}, navigate = {b,c ->}, addDocument = {})
 }

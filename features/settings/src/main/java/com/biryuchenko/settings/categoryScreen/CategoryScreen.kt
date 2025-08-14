@@ -1,5 +1,6 @@
 package com.biryuchenko.settings.categoryScreen
 
+import android.widget.Toast
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -11,6 +12,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.Button
@@ -23,6 +25,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -34,6 +38,7 @@ fun CategoryScreen(
     navigateBack: () -> Unit,
     vm: CategoryViewModel = hiltViewModel(),
 ) {
+    val context = LocalContext.current
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -54,7 +59,7 @@ fun CategoryScreen(
                 Modifier.width(30.dp),
             )
             Text(
-                text = "Settings",
+                text = "Добавить Категорию",
             )
         }
         Spacer(
@@ -62,7 +67,7 @@ fun CategoryScreen(
         )
         Column(
             horizontalAlignment = Alignment.CenterHorizontally
-        )  {
+        ) {
             Text(
                 "Введите Имя:"
             )
@@ -72,6 +77,7 @@ fun CategoryScreen(
                 label = {
                     "Введите Имя:"
                 },
+                singleLine = true,
                 placeholder = {
                     Text("Имя")
                 },
@@ -96,6 +102,8 @@ fun CategoryScreen(
                 placeholder = {
                     Text("Процент")
                 },
+                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal),
+                singleLine = true,
                 onValueChange = {
                     vm.percent = it
                 }
@@ -121,10 +129,14 @@ fun CategoryScreen(
                 ),
                 onClick = {
                     val percentValue = vm.percent.toIntOrNull()
-                    if (percentValue != null) {
-                        vm.insert(Category(category = vm.category, percent = percentValue))
+                    val name = vm.category
+                    if (percentValue != null && !name.isNotBlank()) {
+                        vm.insert(Category(category = name, percent = percentValue))
                         navigateBack()
+                    } else {
+                        Toast.makeText(context, "Есть пустое поле", Toast.LENGTH_SHORT).show()
                     }
+
                 },
             ) {
                 Text(
