@@ -14,7 +14,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
@@ -33,7 +32,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
@@ -58,7 +56,7 @@ fun AddItemScreen(
 
     LaunchedEffect(key1 = documentId) {
         vm.setDocumentId(documentId)
-         vm.findByBarcode(barcode,context)
+        vm.findByBarcode(barcode, context)
     }
 
 
@@ -86,27 +84,11 @@ fun AddItemScreen(
                     )
                 }
                 Spacer(Modifier.width(30.dp))
-                Column {
-                    Text(
-                        text = "Наименование",
-                        fontSize = 10.sp,
-                        color = Color.DarkGray
-                    )
-                    BasicTextField(
-                        value = vm.name,
-                        onValueChange = { txt ->
-                            vm.name = txt
-                        },
-                        singleLine = true,
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(vertical = 8.dp),
-                        textStyle = TextStyle(
-                            fontSize = 18.sp,
-                            color = Color.Black
-                        ),
-                    )
-                }
+                Text(
+                    text = vm.name.ifEmpty { "Not Found" },
+                    fontSize = 10.sp,
+                    color = Color.DarkGray
+                )
             }
 
             Spacer(Modifier.height(55.dp))

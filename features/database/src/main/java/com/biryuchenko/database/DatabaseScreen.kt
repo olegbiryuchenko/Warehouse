@@ -114,8 +114,6 @@ fun DatabaseScreen(
                     Row(
                         verticalAlignment = Alignment.CenterVertically,
                     ) {
-
-
                         Text(
                             modifier = Modifier
                                 .weight(0.6f)
@@ -145,7 +143,6 @@ fun DatabaseScreen(
                             }
                         )
                         Spacer(Modifier.width(15.dp))
-
                     }
                     AnimatedVisibility(
                         modifier = Modifier
@@ -198,8 +195,8 @@ fun DatabaseScreen(
                             }
                         }
                     }
-                    Spacer(Modifier.height(10.dp))
                 }
+                Spacer(Modifier.height(10.dp))
             }
         }
 

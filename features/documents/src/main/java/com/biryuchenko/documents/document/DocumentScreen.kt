@@ -103,10 +103,10 @@ fun DocumentScreen(
             items(products) { product ->
                 val isRotated = remember { mutableStateOf(false) }
 
-                // Анимируем угол поворота
+
                 val rotationAngle by animateFloatAsState(
-                    targetValue = if (isRotated.value) 180f else 0f, // 45 градусов, если isRotated = true, иначе 0
-                    animationSpec = tween(durationMillis = 300), // Длительность анимации в миллисекундах (0.3 секунды)
+                    targetValue = if (isRotated.value) 180f else 0f,
+                    animationSpec = tween(durationMillis = 300),
                 )
 
                 val boxVisible = remember { mutableStateOf(false) }
@@ -315,10 +315,10 @@ fun DocumentScreen(
         }
         val isRotated = remember { mutableStateOf(false) }
 
-        // Анимируем угол поворота
+
         val rotationAngle by animateFloatAsState(
-            targetValue = if (isRotated.value) 45f else 0f, // 45 градусов, если isRotated = true, иначе 0
-            animationSpec = tween(durationMillis = 300), // Длительность анимации в миллисекундах (0.3 секунды)
+            targetValue = if (isRotated.value) 45f else 0f,
+            animationSpec = tween(durationMillis = 300),
         )
 
         IconButton(

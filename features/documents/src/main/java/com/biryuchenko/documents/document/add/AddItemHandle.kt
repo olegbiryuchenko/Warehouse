@@ -101,7 +101,6 @@ fun AddItemScreenHandle(
                         onValueChange = { txt ->
                             vm.name = txt
                         },
-                        singleLine = true,
                         modifier = Modifier
                             .fillMaxWidth()
                             .padding(vertical = 8.dp),

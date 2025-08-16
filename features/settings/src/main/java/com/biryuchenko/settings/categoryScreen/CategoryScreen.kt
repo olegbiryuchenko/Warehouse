@@ -130,7 +130,7 @@ fun CategoryScreen(
                 onClick = {
                     val percentValue = vm.percent.toIntOrNull()
                     val name = vm.category
-                    if (percentValue != null && !name.isNotBlank()) {
+                    if (percentValue != null && name.isNotBlank()) {
                         vm.insert(Category(category = name, percent = percentValue))
                         navigateBack()
                     } else {
