@@ -1,27 +1,22 @@
 package com.biryuchenko.settings
 
-import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.outlined.Category
 import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonColors
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 
@@ -30,54 +25,45 @@ fun SettingsScreen(
     navigateBack: () -> Unit,
     navigateToCategories: () -> Unit,
 ) {
-    Column {
-        Spacer(Modifier.height(30.dp))
+    Column(
+        verticalArrangement = Arrangement.spacedBy(30.dp)
+    ) {
         Row(
-            modifier = Modifier.fillMaxWidth(),
-            verticalAlignment = Alignment.CenterVertically
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(top = 24.dp),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.spacedBy(30.dp)
         ) {
             IconButton(
                 onClick = navigateBack
             ) {
-                Icon(imageVector = Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")
+                Icon(imageVector = Icons.AutoMirrored.Filled.ArrowBack, contentDescription = stringResource(R.string.description_back))
             }
-            Spacer(
-                Modifier.width(30.dp),
-            )
             Text(
-                text = "Settings",
+                text = stringResource(R.string.settings),
             )
         }
-        Spacer(
-            Modifier.height(30.dp),
-        )
         Button(
-            colors = ButtonColors(
-                contentColor = Color.Unspecified,
-                containerColor = Color.Transparent,
-                disabledContentColor = Color.Unspecified,
-                disabledContainerColor = Color.Transparent,
-            ),
             onClick = navigateToCategories
         ) {
             Row(
                 modifier = Modifier
                     .fillMaxWidth(),
                 verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.spacedBy(20.dp)
             ) {
                 Box(
                     modifier = Modifier
-                        .background(color = Color(0xFF107AB0), shape = RoundedCornerShape(24.dp)),
                 ) {
                     Icon(
                         modifier = Modifier.padding(10.dp),
                         imageVector = Icons.Outlined.Category,
-                        contentDescription = "Категории"
+                        contentDescription = stringResource(R.string.categories)
                     )
                 }
-                Spacer(modifier = Modifier.width(20.dp))
                 Text(
-                    "Категории"
+                    stringResource(R.string.categories)
                 )
             }
         }

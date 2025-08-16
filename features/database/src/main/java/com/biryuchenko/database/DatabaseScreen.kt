@@ -25,9 +25,10 @@ import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.KeyboardArrowDown
 import androidx.compose.material.icons.outlined.DeleteOutline
+import androidx.compose.material3.FilledIconButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.IconButtonColors
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -41,13 +42,15 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.biryuchenko.designsystem.components.DeleteAlert
+import com.biryuchenko.designsystem.components.MyFilledIconButton
 import com.biryuchenko.mlkit.Scanner
 import com.biryuchenko.room.entities.ProductDb
-import com.biryuchenko.ui.DeleteAlert
 import kotlinx.coroutines.launch
 
 
@@ -64,35 +67,33 @@ fun DatabaseScreen(
     var onDelete: ProductDb by remember { mutableStateOf(ProductDb(0, ",", "", 0)) }
     val products by vm.allProducts.collectAsState()
     Column(
-        Modifier.fillMaxSize(),
-        horizontalAlignment = Alignment.CenterHorizontally
+        Modifier.fillMaxSize()
+            .padding(top = 24.dp),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.spacedBy(30.dp)
     ) {
-        Spacer(Modifier.height(30.dp))
         Row(
             modifier = Modifier.fillMaxWidth(),
-            verticalAlignment = Alignment.CenterVertically
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.spacedBy(30.dp)
         ) {
             IconButton(
                 onClick = navigateBack
             ) {
-                Icon(imageVector = Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")
+                Icon(imageVector = Icons.AutoMirrored.Filled.ArrowBack, contentDescription = stringResource(R.string.description_back))
             }
-            Spacer(
-                Modifier.width(30.dp),
-            )
             Text(
-                text = "Database",
+                text = stringResource(R.string.database),
             )
         }
-        Spacer(Modifier.height(20.dp))
         LazyColumn {
             items(products) { product ->
                 val isRotated = remember { mutableStateOf(false) }
 
-                // Анимируем угол поворота
+
                 val rotationAngle by animateFloatAsState(
-                    targetValue = if (isRotated.value) 180f else 0f, // 45 градусов, если isRotated = true, иначе 0
-                    animationSpec = tween(durationMillis = 300), // Длительность анимации в миллисекундах (0.3 секунды)
+                    targetValue = if (isRotated.value) 180f else 0f,
+                    animationSpec = tween(durationMillis = 300),
                 )
 
                 val boxVisible = remember { mutableStateOf(false) }
@@ -101,7 +102,7 @@ fun DatabaseScreen(
                         .width(364.dp)
                         .border(
                             width = 1.dp,
-                            color = Color(0xFF06923E),
+                            color = MaterialTheme.colorScheme.onPrimaryContainer,
                             shape = RoundedCornerShape(12.dp)
                         )
                         .clickable {
@@ -131,13 +132,13 @@ fun DatabaseScreen(
                         ) {
                             Icon(
                                 imageVector = Icons.Outlined.DeleteOutline,
-                                contentDescription = "Delete"
+                                contentDescription = stringResource(R.string.description_delete)
                             )
                         }
 
                         Icon(
                             imageVector = Icons.Default.KeyboardArrowDown,
-                            contentDescription = "KeyboardArrowDown",
+                            contentDescription = stringResource(R.string.KeyboardArrowDown),
                             modifier = Modifier.graphicsLayer {
                                 rotationZ = rotationAngle
                             }
@@ -158,36 +159,36 @@ fun DatabaseScreen(
                             Column {
                                 Row {
                                     Text(
-                                        modifier = Modifier.weight(0.3f),
-                                        text = "Name:"
+                                        modifier = Modifier.weight(0.4f),
+                                        text = stringResource(R.string.name),
                                     )
                                     Spacer(Modifier.width(20.dp))
                                     Text(
-                                        modifier = Modifier.weight(0.6f),
+                                        modifier = Modifier.weight(0.4f),
                                         text = product.product.name
                                     )
                                 }
                                 Spacer(Modifier.height(20.dp))
                                 Row {
                                     Text(
-                                        modifier = Modifier.weight(0.3f),
-                                        text = "BarCode: "
+                                        modifier = Modifier.weight(0.4f),
+                                        text = stringResource(R.string.barcode),
                                     )
                                     Spacer(Modifier.width(20.dp))
                                     Text(
-                                        modifier = Modifier.weight(0.6f),
+                                        modifier = Modifier.weight(0.4f),
                                         text = product.product.barcode
                                     )
                                 }
                                 Spacer(Modifier.height(20.dp))
                                 Row {
                                     Text(
-                                        modifier = Modifier.weight(0.3f),
-                                        text = "Category: "
+                                        modifier = Modifier.weight(0.4f),
+                                        text = stringResource(R.string.category),
                                     )
                                     Spacer(Modifier.width(20.dp))
                                     Text(
-                                        modifier = Modifier.weight(0.6f),
+                                        modifier = Modifier.weight(0.4f),
                                         text = product.categoryDetails.category
                                     )
                                 }
@@ -206,14 +207,8 @@ fun DatabaseScreen(
                 .fillMaxSize(),
             contentAlignment = Alignment.BottomEnd
         ) {
-            IconButton(
+            MyFilledIconButton(
                 modifier = Modifier.size(48.dp),
-                colors = IconButtonColors(
-                    contentColor = Color.White,
-                    containerColor = Color(0xFF06923E),
-                    disabledContentColor = Color.White,
-                    disabledContainerColor = Color(0xFF06923E),
-                ),
                 onClick = {
                     scope.launch {
                         val result = scanner.startBarcodeScanSuspend(context)
@@ -231,18 +226,17 @@ fun DatabaseScreen(
                             Toast.makeText(context, "Cancelled", Toast.LENGTH_SHORT).show()
                         }
                     }
-                }
-
-            ) {
-                Icon(imageVector = Icons.Default.Add, contentDescription = "Add document")
-            }
+                },
+                icon = Icons.Default.Add,
+                contentDescription = stringResource(R.string.add_document)
+            )
         }
         AnimatedVisibility(
             visible = openDialog
         ) {
             DeleteAlert(
-                title = "Удалить документ",
-                text = "Вы дейсвительно хотите удалить этот документ?",
+                title = stringResource(R.string.delete_ask_product),
+                text = stringResource(R.string.delete_ask_description_product),
                 onDismissRequest = {
                     openDialog = false
                     Toast.makeText(context, "Отмена", Toast.LENGTH_SHORT).show()

@@ -36,7 +36,6 @@ android {
 
 dependencies {
 
-    implementation(project(":core:ui"))
     implementation(project(":core:database:room"))
     implementation(project(":core:mlkit"))
 

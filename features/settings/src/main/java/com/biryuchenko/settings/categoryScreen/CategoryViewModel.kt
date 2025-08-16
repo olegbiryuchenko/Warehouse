@@ -1,5 +1,7 @@
 package com.biryuchenko.settings.categoryScreen
 
+import android.content.Context
+import android.widget.Toast
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -40,12 +42,13 @@ class CategoryViewModel @Inject constructor(
         }
     }
 
-    fun delete(category: Category) {
+    fun delete(category: Category, context: Context) {
         viewModelScope.launch {
             try {
                 categoryRepository.deleteItem(category)
             } catch (e: Exception) {
-                println("Ошибка при удалении: ${e.message}")
+                Toast.makeText(context, "Ошибка при удалении: ${e.message}", Toast.LENGTH_SHORT)
+                    .show()
             }
         }
     }

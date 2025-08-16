@@ -1,6 +1,6 @@
 package com.biryuchenko.database.add
 
-import androidx.compose.foundation.border
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -32,11 +32,14 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.biryuchenko.database.DatabaseVM
+import com.biryuchenko.database.R
+import com.biryuchenko.designsystem.components.MyButton
 
 @Composable
 fun AddItemToDatabaseScreen(
@@ -49,27 +52,26 @@ fun AddItemToDatabaseScreen(
     var selectedCategoryId by remember { mutableStateOf<Long?>(null) }
 
     Column(
-        Modifier.fillMaxSize(),
+        Modifier.fillMaxSize()
+            .padding(top = 24.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
-
-        ) {
-        Spacer(Modifier.height(30.dp))
+        verticalArrangement = Arrangement.spacedBy(30.dp)
+    ) {
         Row(
-            modifier = Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically
+            modifier = Modifier.fillMaxWidth(),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.spacedBy(30.dp)
         ) {
             IconButton(
                 onClick = navigate
             ) {
                 Icon(imageVector = Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")
             }
-            Spacer(
-                Modifier.width(30.dp),
-            )
+
             Text(
-                text = "Добавить в Базу данных",
+                text = stringResource(R.string.add_to_db),
             )
         }
-        Spacer(Modifier.height(20.dp))
         Column(
             Modifier
                 .fillMaxWidth()
@@ -77,7 +79,7 @@ fun AddItemToDatabaseScreen(
         ) {
             Spacer(Modifier.height(50.dp))
             Text(
-                modifier = Modifier.fillMaxWidth(), text = "Штрих код"
+                modifier = Modifier.fillMaxWidth(), text = stringResource(R.string.barcode)
             )
             Spacer(Modifier.height(5.dp))
             OutlinedTextField(
@@ -88,11 +90,11 @@ fun AddItemToDatabaseScreen(
                 onValueChange = {})
             Spacer(Modifier.height(10.dp))
             Text(
-                modifier = Modifier.fillMaxWidth(), text = "Название"
+                modifier = Modifier.fillMaxWidth(), text = stringResource(R.string.name)
             )
             Spacer(Modifier.height(5.dp))
             OutlinedTextField(modifier = Modifier.fillMaxWidth(), label = {
-                Text("Введите название")
+                Text(stringResource(R.string.input_name))
             }, value = vm.name, onValueChange = { txt ->
                 vm.name = txt
             })
@@ -108,12 +110,7 @@ fun AddItemToDatabaseScreen(
 
                 Spacer(Modifier.width(10.dp))
                 Button(
-                    colors = ButtonColors(
-                        containerColor = if (isSelected) Color(0xFF06923E) else Color.White,
-                        contentColor = if (isSelected) Color.White else Color(0xFF06923E),
-                        disabledContentColor = Color(0xFF06923E),
-                        disabledContainerColor = Color.White
-                    ), onClick = {
+                    onClick = {
                         selectedCategoryId = category.uid
                         vm.categoryId = category.uid
                         vm.category = category.category
@@ -128,27 +125,21 @@ fun AddItemToDatabaseScreen(
             modifier = Modifier
                 .fillMaxWidth()
                 .fillMaxHeight()
-                .padding(bottom = 15.dp),
+                .padding(bottom = 45.dp),
             contentAlignment = Alignment.BottomCenter
         ) {
-            Button(
+            MyButton(
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(50.dp),
-                shape = RoundedCornerShape(0),
-                colors = ButtonColors(
-                    containerColor = Color(0xFF06923E),
-                    contentColor = Color.White,
-                    disabledContentColor = Color(0xFF06923E),
-                    disabledContainerColor = Color.White,
-                ),
                 onClick = {
                     vm.add(barcode, context = context)
                     navigate()
                 },
+                shape = RoundedCornerShape(0),
             ) {
                 Text(
-                    text = "Добавить"
+                    text = stringResource(R.string.add_document)
                 )
             }
         }

@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="database">База товаров</string>
+    <string name="name">Наименование</string>
+    <string name="DocumentsScreenLabel">Документы</string>
+    <string name="OutputPrice">Цена продажи:</string>
+    <string name="OutputPricePerItem">Цена одной единицы:</string>
+    <string name="fullPrice">Полная цена:</string>
+    <string name="inputPrice">Введите цену</string>
+    <string name="markup">Наценка:</string>
+    <string name="inputMarkup">"Введите наценку"</string>
+    <string name="count">Количество:</string>
+    <string name="inputCount">Введите количество:</string>
+    <string name="inputDocumentName">Название документа</string>
+    <string name="add_document">Добавить документ</string>
+    <string name="placeholder_document_name">Документ</string>
+    <string name="description_back">Назад</string>
+    <string name="description_edit">Редактировать</string>
+    <string name="description_delete">Удалить</string>
+    <string name="description_add">Добавить</string>
+    <string name="delete_ask">Удалить документ</string>
+    <string name="delete_ask_description">Вы дейсвительно хотите удалить документ под названием </string>
+    <string name="output_price">Цена продажи</string>
+    <string name="output_price_for_one">Цена за единицу</string>
+    <string name="category">Категория</string>
+    <string name="total">Итого</string>
+    <string name="delete_ask_product">Удалить товар</string>
+    <string name="delete_ask_description_product">Вы дейсвительно хотите удалить товар под названием</string>
+    <string name="barcode_scanner">Сканер Штрих-кода</string>
+    <string name="KeyboardArrowDown">Раскрыть</string>
+    <string name="not_found">Не найдено</string>
+    <string name="barcode">Штрих-Код</string>
+    <string name="add_to_db">Добавить в Базу данных</string>
+    <string name="input_name">Введите Название</string>
+</resources>

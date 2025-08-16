@@ -8,7 +8,6 @@ import com.biryuchenko.calculate.Calculator
 import kotlinx.coroutines.delay
 
 class DocumentViewModel : ViewModel() {
-    var result: String? = ""
 
     private var calculator = Calculator()
     private var output = Pair(0, 0)

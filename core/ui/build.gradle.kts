@@ -58,4 +58,6 @@ dependencies {
     implementation(libs.androidx.lifecycle.viewmodel.compose)
     //Extended Material IconsPack
     implementation(libs.androidx.material.icons.extended)
+
+    implementation("androidx.compose.ui:ui-text-google-fonts:1.8.1")
 }

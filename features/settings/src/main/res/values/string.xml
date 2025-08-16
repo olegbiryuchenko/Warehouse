@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="settings">Настройки</string>
+    <string name="add">Добавить</string>
+    <string name="description_back">назад</string>
+    <string name="categories">Категории</string>
+    <string name="delete">Удалить</string>
+    <string name="add_category">Добавить Категорию</string>
+    <string name="input_name">Введите Имя:</string>
+    <string name="name">Имя</string>
+    <string name="input_percent">"Введите Процент(целое число):"</string>
+    <string name="percent">Процент</string>
+    <string name="delete_ask_category">Удалить категорию</string>
+    <string name="delete_ask_description_category">Вы дейсвительно хотите удалить категорию под названием </string>
+</resources>

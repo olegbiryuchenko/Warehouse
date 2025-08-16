@@ -42,9 +42,8 @@ dependencies {
 
     implementation(project(":core:calculate"))
     implementation(project(":core:mlkit"))
-    implementation(project(":core:ui"))
     implementation(project(":core:database:room"))
-
+    implementation(project(":core:designsystem"))
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.activity.compose)

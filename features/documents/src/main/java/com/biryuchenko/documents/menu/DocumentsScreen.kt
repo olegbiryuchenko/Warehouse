@@ -3,10 +3,10 @@ package com.biryuchenko.documents.menu
 
 import android.widget.Toast
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -22,10 +22,8 @@ import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonColors
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.IconButtonColors
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -35,17 +33,16 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.biryuchenko.designsystem.components.DeleteAlert
+import com.biryuchenko.designsystem.components.MyFilledIconButton
 import com.biryuchenko.documents.R
 import com.biryuchenko.room.entities.Document
-import com.biryuchenko.ui.DeleteAlert
 
 
 @Composable
@@ -58,21 +55,26 @@ fun DocumentsScreen(
     val documents by vm.allDocuments.collectAsState()
     val context = LocalContext.current
     var openDialog by remember { mutableStateOf(false) }
-    var documentToDelete by remember { mutableStateOf(Document(0,"",0)) }
+    var documentToDelete by remember { mutableStateOf(Document(0, "", 0)) }
     Column(
-        Modifier.fillMaxSize()
+        Modifier.fillMaxSize(),
+        verticalArrangement = Arrangement.spacedBy(30.dp)
     ) {
-        Spacer(Modifier.height(30.dp))
         Row(
-            modifier = Modifier.fillMaxWidth(),
-            verticalAlignment = Alignment.CenterVertically
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(top = 24.dp),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.spacedBy(30.dp)
         ) {
             IconButton(
                 onClick = navigateBack
             ) {
-                Icon(imageVector = Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")
+                Icon(
+                    imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                    contentDescription = stringResource(R.string.description_back)
+                )
             }
-            Spacer(Modifier.width(30.dp))
             Text(
                 text = stringResource(R.string.DocumentsScreenLabel),
             )
@@ -80,20 +82,14 @@ fun DocumentsScreen(
         LazyColumn(
             horizontalAlignment = Alignment.CenterHorizontally,
             modifier = Modifier
-                .fillMaxSize()
-                .padding(top = 40.dp)
+                .fillMaxSize(),
+            verticalArrangement = Arrangement.spacedBy(10.dp)
         ) {
             items(documents) { document ->
                 Button(
                     modifier = Modifier
                         .width(364.dp)
                         .height(50.dp),
-                    colors = ButtonColors(
-                        containerColor = colorResource(R.color.Green),
-                        contentColor = Color.White,
-                        disabledContentColor = colorResource(R.color.Green),
-                        disabledContainerColor = Color.White,
-                    ),
                     shape = RoundedCornerShape(13),
 
                     onClick = { navigate(document.uid, document.document) }
@@ -113,7 +109,7 @@ fun DocumentsScreen(
                         ) {
                             Icon(
                                 imageVector = Icons.Default.Edit,
-                                contentDescription = "Edit"
+                                contentDescription = stringResource(R.string.description_edit)
                             )
                         }
                         IconButton(
@@ -125,12 +121,11 @@ fun DocumentsScreen(
                         ) {
                             Icon(
                                 imageVector = Icons.Default.Delete,
-                                contentDescription = "Delete"
+                                contentDescription = stringResource(R.string.description_delete)
                             )
                         }
                     }
                 }
-                Spacer(Modifier.height(10.dp))
             }
 
         }
@@ -141,26 +136,19 @@ fun DocumentsScreen(
             .fillMaxSize(),
         contentAlignment = Alignment.BottomEnd
     ) {
-        IconButton(
+        MyFilledIconButton(
             modifier = Modifier.size(48.dp),
-            colors = IconButtonColors(
-                contentColor = Color.White,
-                containerColor = colorResource(R.color.Green),
-                disabledContentColor = Color.White,
-                disabledContainerColor = colorResource(R.color.Green),
-            ),
-            onClick = addDocument
-        ) {
-            Icon(imageVector = Icons.Default.Add, contentDescription = "Add document")
-        }
+            onClick = addDocument,
+            icon = Icons.Default.Add,
+            contentDescription = stringResource(R.string.description_add)
+        )
     }
-
     AnimatedVisibility(
         visible = openDialog
     ) {
         DeleteAlert(
-            title = "Удалить документ",
-            text = "Вы дейсвительно хотите удалить " + documentToDelete.document,
+            title = stringResource(R.string.delete_ask),
+            text = stringResource(R.string.delete_ask_description) + documentToDelete.document,
             onDismissRequest = {
                 openDialog = false
                 Toast.makeText(context, "Отмена", Toast.LENGTH_SHORT).show()
