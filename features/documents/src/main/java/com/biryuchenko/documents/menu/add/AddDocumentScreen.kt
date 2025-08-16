@@ -1,5 +1,6 @@
 package com.biryuchenko.documents.menu.add
 
+import android.widget.Toast
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -18,6 +19,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
@@ -32,6 +34,7 @@ fun AddDocumentScreen(
     navigate: () -> Unit,
     vm: DocumentsViewModel = hiltViewModel()
 ) {
+    val context = LocalContext.current
     //TODO REWRITE
     val maxLength = 30
     Column(
@@ -97,8 +100,12 @@ fun AddDocumentScreen(
                 .height(50.dp),
             shape = RoundedCornerShape(0),
             onClick = {
-                vm.add()
-                navigate()
+                if (vm.text.isNotBlank()) {
+                    vm.add(context)
+                    navigate()
+                } else {
+                    Toast.makeText(context, "Обнаружены пустые поля", Toast.LENGTH_SHORT).show()
+                }
             }
         ) {
             Text(

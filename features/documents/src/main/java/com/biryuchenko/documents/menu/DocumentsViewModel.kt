@@ -1,7 +1,9 @@
 package com.biryuchenko.documents.menu
 
 
+import android.content.Context
 import android.util.Log
+import android.widget.Toast
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -30,16 +32,16 @@ class DocumentsViewModel @Inject constructor(
                 initialValue = emptyList()
             )
 
-    fun add() {
-        val currentDate = Date()
-        val unixTimestampMillis: Long = currentDate.time
-        viewModelScope.launch {
-            try {
-                documents.insertDocument(Document(document = text, date = unixTimestampMillis))
-            } catch (e: Exception) {
+    fun add(context: Context) {
+            val currentDate = Date()
+            val unixTimestampMillis: Long = currentDate.time
+            viewModelScope.launch {
+                try {
+                    documents.insertDocument(Document(document = text, date = unixTimestampMillis))
+                } catch (e: Exception) {
 
+                }
             }
-        }
     }
 
     fun delete(document: Document) {

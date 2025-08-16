@@ -43,4 +43,7 @@ dependencies {
 
     //barcode scanner
     implementation ("com.google.android.gms:play-services-code-scanner:16.1.0")
+
+    implementation("com.google.android.gms:play-services-base:18.7.2")
+    implementation("com.google.android.gms:play-services-tflite-java:16.4.0")
 }
