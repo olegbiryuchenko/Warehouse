@@ -17,7 +17,6 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonColors
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.OutlinedTextField
@@ -30,7 +29,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -52,7 +50,8 @@ fun AddItemToDatabaseScreen(
     var selectedCategoryId by remember { mutableStateOf<Long?>(null) }
 
     Column(
-        Modifier.fillMaxSize()
+        Modifier
+            .fillMaxSize()
             .padding(top = 24.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.spacedBy(30.dp)
@@ -93,17 +92,27 @@ fun AddItemToDatabaseScreen(
                 modifier = Modifier.fillMaxWidth(), text = stringResource(R.string.name)
             )
             Spacer(Modifier.height(5.dp))
-            OutlinedTextField(modifier = Modifier.fillMaxWidth(), label = {
-                Text(stringResource(R.string.input_name))
-            }, value = vm.name, onValueChange = { txt ->
-                vm.name = txt
-            })
+            OutlinedTextField(
+                modifier = Modifier.fillMaxWidth(),
+                singleLine = true,
+                label = {
+                    Text(stringResource(R.string.input_name))
+                }, value = vm.name, onValueChange = { txt ->
+                    vm.name = txt
+                })
             Spacer(Modifier.height(20.dp))
         }
         LazyRow(
             modifier = Modifier
                 .fillMaxWidth()
         ) {
+            item {
+                if (categories.isEmpty()) {
+                    Text(
+                        "Создайте категорию (меню настройки)"
+                    )
+                }
+            }
             items(categories) { category ->
 
                 val isSelected = selectedCategoryId == category.uid

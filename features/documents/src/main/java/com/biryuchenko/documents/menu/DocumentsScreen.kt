@@ -103,15 +103,15 @@ fun DocumentsScreen(
                             text = document.document,
                             textAlign = TextAlign.Start,
                         )
-                        IconButton(
-                            modifier = Modifier.weight(0.1f),
-                            onClick = {}
-                        ) {
-                            Icon(
-                                imageVector = Icons.Default.Edit,
-                                contentDescription = stringResource(R.string.description_edit)
-                            )
-                        }
+//                        IconButton(
+//                            modifier = Modifier.weight(0.1f),
+//                            onClick = {}
+//                        ) {
+//                            Icon(
+//                                imageVector = Icons.Default.Edit,
+//                                contentDescription = stringResource(R.string.description_edit)
+//                            )
+//                        }
                         IconButton(
                             modifier = Modifier.weight(0.1f),
                             onClick = {
