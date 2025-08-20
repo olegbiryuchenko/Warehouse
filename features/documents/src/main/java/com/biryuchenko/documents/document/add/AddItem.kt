@@ -9,10 +9,12 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.Icon
@@ -51,7 +53,6 @@ fun AddItemScreen(
 ) {
     val context = LocalContext.current
     val scope = rememberCoroutineScope()
-
     LaunchedEffect(key1 = documentId) {
         vm.setDocumentId(documentId)
         vm.findByBarcode(barcode, context)
@@ -60,7 +61,8 @@ fun AddItemScreen(
 
     Column(
         modifier = Modifier
-            .fillMaxSize(),
+            .fillMaxSize()
+            .imePadding(),
         verticalArrangement = Arrangement.spacedBy(20.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
@@ -121,10 +123,13 @@ fun AddItemScreen(
                 )
             }
         }
+
         Column(
             modifier = Modifier
                 .padding(top = 50.dp, start = 30.dp, end = 30.dp)
-                .fillMaxWidth(),
+                .fillMaxWidth()
+                .weight(1f)
+                .verticalScroll(rememberScrollState()),
             verticalArrangement = Arrangement.spacedBy(10.dp)
         ) {
             Text(
