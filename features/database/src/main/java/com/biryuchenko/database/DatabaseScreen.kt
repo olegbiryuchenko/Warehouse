@@ -102,7 +102,7 @@ fun DatabaseScreen(
                         .width(364.dp)
                         .border(
                             width = 1.dp,
-                            color = MaterialTheme.colorScheme.onPrimaryContainer,
+                            color = MaterialTheme.colorScheme.primary,
                             shape = RoundedCornerShape(12.dp)
                         )
                         .clickable {

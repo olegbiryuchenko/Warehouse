@@ -20,6 +20,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material.icons.filled.Download
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material3.Button
 import androidx.compose.material3.Icon
@@ -39,10 +40,12 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.biryuchenko.apachepoi.createExcelFile
 import com.biryuchenko.designsystem.components.DeleteAlert
 import com.biryuchenko.designsystem.components.MyFilledIconButton
 import com.biryuchenko.documents.R
 import com.biryuchenko.room.entities.Document
+import com.biryuchenko.room.entities.Product
 
 
 @Composable
@@ -105,10 +108,11 @@ fun DocumentsScreen(
                         )
 //                        IconButton(
 //                            modifier = Modifier.weight(0.1f),
-//                            onClick = {}
+//                            onClick = {
+//                            }
 //                        ) {
 //                            Icon(
-//                                imageVector = Icons.Default.Edit,
+//                                imageVector = Icons.Default.Download,
 //                                contentDescription = stringResource(R.string.description_edit)
 //                            )
 //                        }

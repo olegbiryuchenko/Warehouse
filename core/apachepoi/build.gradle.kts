@@ -4,7 +4,7 @@ plugins {
 }
 
 android {
-    namespace = "com.biryuchenko.mlkit"
+    namespace = "com.biryuchenko.apachepoi"
     compileSdk = 36
 
     defaultConfig {
@@ -41,9 +41,8 @@ dependencies {
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
 
-    //barcode scanner
-    implementation ("com.google.android.gms:play-services-code-scanner:16.1.0")
+    implementation(project(":core:database:room"))
 
-    implementation("com.google.android.gms:play-services-base:18.7.2")
-    implementation("com.google.android.gms:play-services-tflite-java:16.4.0")
+    implementation(libs.poi)
+    implementation(libs.poi.ooxml)
 }

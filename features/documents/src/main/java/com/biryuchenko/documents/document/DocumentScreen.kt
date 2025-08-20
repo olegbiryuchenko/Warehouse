@@ -24,6 +24,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.Download
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.KeyboardArrowDown
 import androidx.compose.material.icons.filled.QrCodeScanner
@@ -50,6 +51,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.biryuchenko.apachepoi.createExcelFile
 import com.biryuchenko.designsystem.components.DeleteAlert
 import com.biryuchenko.designsystem.components.MyFilledIconButton
 import com.biryuchenko.designsystem.components.MyIconButton
@@ -87,7 +89,7 @@ fun DocumentScreen(
                 .fillMaxWidth()
                 .padding(top = 24.dp),
             verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.spacedBy(30.dp)
+            horizontalArrangement = Arrangement.SpaceBetween
         ) {
             IconButton(
                 onClick = navigateBack
@@ -100,6 +102,20 @@ fun DocumentScreen(
             Text(
                 text = stringResource(R.string.DocumentsScreenLabel),
             )
+            IconButton(
+                onClick = {
+                    scope.launch {
+
+                        createExcelFile(context, products = products.toList(), documentName)
+
+                    }
+                }
+            ) {
+                Icon(
+                    imageVector = Icons.Default.Download,
+                    contentDescription = stringResource(R.string.description_back)
+                )
+            }
         }
         LazyColumn(
             modifier = Modifier
@@ -121,7 +137,7 @@ fun DocumentScreen(
                     modifier = Modifier
                         .border(
                             width = 1.dp,
-                            color = MaterialTheme.colorScheme.onPrimaryContainer,
+                            color = MaterialTheme.colorScheme.primary,
                             shape = RoundedCornerShape(12.dp)
                         )
                         .clickable {

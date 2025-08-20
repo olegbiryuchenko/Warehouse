@@ -12,9 +12,9 @@
             <option value="$PROJECT_DIR$" />
             <option value="$PROJECT_DIR$/app" />
             <option value="$PROJECT_DIR$/core" />
+            <option value="$PROJECT_DIR$/core/apachepoi" />
             <option value="$PROJECT_DIR$/core/calculate" />
             <option value="$PROJECT_DIR$/core/database" />
-            <option value="$PROJECT_DIR$/core/database/dataserializer" />
             <option value="$PROJECT_DIR$/core/database/room" />
             <option value="$PROJECT_DIR$/core/designsystem" />
             <option value="$PROJECT_DIR$/core/mlkit" />

@@ -20,6 +20,8 @@ material = "1.12.0"
 composeNavigation = "2.9.3"
 mockitoCore = "5.18.0"
 mockitoKotlin = "6.0.0"
+poi = "5.4.1"
+poiOoxml = "5.4.1"
 roomCompiler = "2.7.2"
 roomKtx = "2.7.2"
 roomPaging = "2.7.2"
@@ -63,6 +65,8 @@ mockito-core = { module = "org.mockito:mockito-core", version.ref = "mockitoCore
 mockito-kotlin = { module = "org.mockito.kotlin:mockito-kotlin", version.ref = "mockitoKotlin" }
 navigation-compose = { module = "androidx.navigation:navigation-compose", version.ref = "composeNavigation" }
 kotlinx-serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "serialization"}
+poi = { module = "org.apache.poi:poi", version.ref = "poi" }
+poi-ooxml = { module = "org.apache.poi:poi-ooxml", version.ref = "poiOoxml" }
 
 
 [plugins]
