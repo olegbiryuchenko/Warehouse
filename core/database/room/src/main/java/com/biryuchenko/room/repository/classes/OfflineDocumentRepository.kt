@@ -18,6 +18,10 @@ class OfflineDocumentRepository @Inject constructor(
         return docDao.findByName(uid)
     }
 
+    override fun filterByDate(firstDate: Long, lastDate: Long): Flow<Document?> {
+        return docDao.filterByDate(firstDate, lastDate)
+    }
+
     override suspend fun insertDocument(document: Document) {
         return docDao.insertAll(document)
     }

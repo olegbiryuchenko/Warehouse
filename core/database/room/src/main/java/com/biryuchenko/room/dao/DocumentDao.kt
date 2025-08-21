@@ -12,6 +12,8 @@ interface DocumentDao {
     @Query("SELECT * FROM documents")
     fun getAll(): Flow<List<Document>>
 
+    @Query("SELECT * FROM documents WHERE date > :firstDate AND date < :lastDate ")
+    fun filterByDate(firstDate: Long, lastDate: Long): Flow<Document?>
 
     @Query("SELECT * FROM documents WHERE uid == :uid")
     fun findByName(uid: Long): Flow<Document?>

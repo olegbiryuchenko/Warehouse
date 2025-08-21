@@ -37,7 +37,7 @@ class DocumentDbVm @Inject constructor(
 ) : ViewModel() {
 
     var name by mutableStateOf("")
-    var category by mutableStateOf("")
+    var category by mutableStateOf("Пусто")
 
     private val documentId = MutableStateFlow<Long?>(null)
 

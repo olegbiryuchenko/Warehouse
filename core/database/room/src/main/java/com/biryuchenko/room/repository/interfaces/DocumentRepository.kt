@@ -10,6 +10,8 @@ interface DocumentRepository {
 
     fun getItemStream(uid: Long): Flow<Document?>
 
+    fun filterByDate(firstDate: Long, lastDate: Long): Flow<Document?>
+
     suspend fun insertDocument(document: Document)
 
     suspend fun deleteItem(document: Document)
