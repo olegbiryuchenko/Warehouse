@@ -56,6 +56,7 @@ import com.biryuchenko.designsystem.components.DeleteAlert
 import com.biryuchenko.designsystem.components.MyFilledIconButton
 import com.biryuchenko.designsystem.components.MyIconButton
 import com.biryuchenko.documents.R
+import com.biryuchenko.documents.menu.DocumentsViewModel
 import com.biryuchenko.mlkit.Scanner
 import com.biryuchenko.room.entities.Product
 import kotlinx.coroutines.launch

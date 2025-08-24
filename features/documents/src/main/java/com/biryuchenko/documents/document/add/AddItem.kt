@@ -41,6 +41,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.biryuchenko.designsystem.components.MyButton
 import com.biryuchenko.documents.R
 import com.biryuchenko.documents.document.DocumentDbVm
+import com.biryuchenko.documents.menu.DocumentsViewModel
 import kotlinx.coroutines.launch
 
 
@@ -50,6 +51,7 @@ fun AddItemScreen(
     navigate: () -> Unit,
     barcode: String,
     documentId: Long,
+    vm1: DocumentsViewModel = hiltViewModel(),
 ) {
     val context = LocalContext.current
     val scope = rememberCoroutineScope()
@@ -230,6 +232,7 @@ fun AddItemScreen(
             onClick = {
                 scope.launch {
                     val isSuccess = vm.add()
+
                     if (isSuccess) {
                         navigate()
                     } else {

@@ -1,5 +1,4 @@
-package com.biryuchenko.documents.menu
-
+package com.biryuchenko.documents.menu.folders
 
 import android.widget.Toast
 import androidx.compose.animation.AnimatedVisibility
@@ -28,7 +27,6 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -43,30 +41,24 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.biryuchenko.designsystem.components.DateRangePickerModal
 import com.biryuchenko.designsystem.components.DeleteAlert
 import com.biryuchenko.designsystem.components.MyFilledIconButton
 import com.biryuchenko.documents.R
+import com.biryuchenko.documents.menu.DocumentsViewModel
 import com.biryuchenko.room.entities.Document
 
 
 @Composable
-fun DocumentsScreen(
-    addDocument: (Long) -> Unit,
+fun FolderDocumentsScreen(
+    addDocument: () -> Unit,
     navigate: (Long, String) -> Unit,
     navigateBack: () -> Unit,
-    navigateToAdd: () -> Unit,
     vm: DocumentsViewModel = hiltViewModel(),
-    folderId: Long
 ) {
-    LaunchedEffect(folderId) {
-        vm.setFolderId(folderId)
-    }
     val documents by vm.allDocuments.collectAsState()
     val context = LocalContext.current
     var openDialog by remember { mutableStateOf(false) }
-    var documentToDelete by remember { mutableStateOf(Document(0, "", folderId = 0, date = 0)) }
-//    var isVisible by remember { mutableStateOf(false) }
+    var documentToDelete by remember { mutableStateOf(Document(0, "", 0,0)) }
 
     Column(
         Modifier.fillMaxSize(),
@@ -91,11 +83,6 @@ fun DocumentsScreen(
                 text = stringResource(R.string.DocumentsScreenLabel),
             )
         }
-//        Button(
-//            onClick = {isVisible = true}
-//        ) {
-//            Text("filter")
-//        }
 
         LazyColumn(
             horizontalAlignment = Alignment.CenterHorizontally,
@@ -136,23 +123,24 @@ fun DocumentsScreen(
                     }
                 }
             }
-//            item {
-//                Button(
-//                    modifier = Modifier
-//                        .width(364.dp)
-//                        .height(70.dp),
-//                    shape = RoundedCornerShape(13),
-//                    border = BorderStroke(2.dp, color = MaterialTheme.colorScheme.surfaceTint),
-//                    colors = ButtonColors(containerColor = Color.Transparent, disabledContainerColor = Color.Transparent, contentColor = MaterialTheme.colorScheme.onPrimary, disabledContentColor = MaterialTheme.colorScheme.onPrimary ),
-//                    onClick =  navigateToAdd
-//                ) {
-//                    Icon(
-//                        tint = MaterialTheme.colorScheme.surfaceTint,
-//                        imageVector = Icons.Default.Add,
-//                        contentDescription = ""
-//                    )
-//                }
-//            }
+            item {
+                Button(
+                    modifier = Modifier
+                        .width(364.dp)
+                        .height(70.dp),
+                    shape = RoundedCornerShape(13),
+                    border = BorderStroke(2.dp, color = MaterialTheme.colorScheme.surfaceTint),
+                    colors = ButtonColors(containerColor = Color.Transparent, disabledContainerColor = Color.Transparent, contentColor = MaterialTheme.colorScheme.onPrimary, disabledContentColor = MaterialTheme.colorScheme.onPrimary ),
+                    onClick = { }
+                ) {
+                    Icon(
+                        tint = MaterialTheme.colorScheme.surfaceTint,
+                        imageVector = Icons.Default.Add,
+                        contentDescription = ""
+                    )
+                }
+            }
+
         }
     }
     Box(
@@ -163,26 +151,11 @@ fun DocumentsScreen(
     ) {
         MyFilledIconButton(
             modifier = Modifier.size(48.dp),
-            onClick = {addDocument(folderId)},
+            onClick = addDocument,
             icon = Icons.Default.Add,
             contentDescription = stringResource(R.string.description_add)
         )
     }
-//    AnimatedVisibility(
-//        visible = isVisible
-//    ) {
-//        DateRangePickerModal(
-//            onDateRangeSelected ={el ->
-//                    vm.filter(
-//                        el.first, el.second,false
-//                    )
-//                isVisible = false
-//            },
-//            onDismiss = {
-//                isVisible = false
-//            }
-//        )
-//    }
     AnimatedVisibility(
         visible = openDialog
     ) {

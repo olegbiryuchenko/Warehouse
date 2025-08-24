@@ -2,6 +2,7 @@ package com.biryuchenko.room.di
 
 import com.biryuchenko.room.dao.CategoryDao
 import com.biryuchenko.room.dao.DocumentDao
+import com.biryuchenko.room.dao.FolderDao
 import com.biryuchenko.room.dao.ProductsDao
 import com.biryuchenko.room.dao.ProductsDbDao
 import com.biryuchenko.room.database.ProductsDatabase
@@ -38,5 +39,12 @@ internal object DaoModule {
         database: ProductsDatabase,
     ): ProductsDbDao{
         return database.productsDbDao()
+    }
+    @Provides
+    @Singleton
+    fun providesFolderDao(
+        database: ProductsDatabase,
+    ): FolderDao{
+        return database.folderDao()
     }
 }

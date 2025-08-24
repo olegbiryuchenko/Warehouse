@@ -2,10 +2,12 @@ package com.biryuchenko.room.di
 
 import com.biryuchenko.room.repository.classes.OfflineCategoryRepository
 import com.biryuchenko.room.repository.classes.OfflineDocumentRepository
+import com.biryuchenko.room.repository.classes.OfflineFolderRepository
 import com.biryuchenko.room.repository.classes.OfflineProductsDbRepository
 import com.biryuchenko.room.repository.classes.OfflineProductsRepository
 import com.biryuchenko.room.repository.interfaces.CategoryRepository
 import com.biryuchenko.room.repository.interfaces.DocumentRepository
+import com.biryuchenko.room.repository.interfaces.FolderRepository
 import com.biryuchenko.room.repository.interfaces.ProductsDbRepository
 import com.biryuchenko.room.repository.interfaces.ProductsRepository
 import dagger.Binds
@@ -42,5 +44,11 @@ abstract class RepositoryModule {
     abstract fun bindProductsRepository(
         impl: OfflineProductsRepository
     ): ProductsRepository
+
+    @Binds
+    @Singleton
+    abstract fun bindFolderRepository(
+        impl: OfflineFolderRepository
+    ): FolderRepository
 }
 

@@ -12,6 +12,8 @@ import com.biryuchenko.documents.document.add.AddItemScreen
 import com.biryuchenko.documents.document.add.AddItemScreenHandle
 import com.biryuchenko.documents.menu.DocumentsScreen
 import com.biryuchenko.documents.menu.add.AddDocumentScreen
+import com.biryuchenko.documents.menu.folders.Folders
+import com.biryuchenko.documents.menu.folders.add.CreateFolder
 import com.biryuchenko.home.HomeScreen
 import com.biryuchenko.mlkit.Scanner
 import com.biryuchenko.settings.SettingsScreen
@@ -26,18 +28,25 @@ fun Navigation() {
     NavHost(navController = navController, startDestination = HomeScreen) {
         composable<HomeScreen> {
             HomeScreen(
-                navigateDocumentsScreen = { navController.navigate(DocumentsScreen) },
+                navigateDocumentsScreen = { navController.navigate(FoldersScreen) },
                 navigateDatabaseScreen = { navController.navigate(Database) },
                 navigateSettingsScreen = { navController.navigate(SettingsScreen) }
             )
         }
-        composable<DocumentsScreen> {
+        composable<DocumentsScreen> {backStackEntry ->
+            val args = backStackEntry.toRoute<DocumentsScreen>()
             DocumentsScreen(
-                addDocument = { navController.navigate(AddDocumentScreen) },
+                addDocument = {folderId ->
+                    navController.navigate(
+                    AddDocumentScreen(folderId))
+                },
                 navigate = { documentId, documentName ->
                     navController.navigate(DocumentScreen(documentId, documentName))
                 },
-                navigateBack = { navController.popBackStack() })
+                navigateBack = { navController.popBackStack() },
+                folderId = args.folderId,
+                navigateToAdd = {navController.navigate(CreateFolderScreen)}
+            )
         }
         composable<DocumentScreen> { backStackEntry ->
             val args = backStackEntry.toRoute<DocumentScreen>()
@@ -74,8 +83,12 @@ fun Navigation() {
                 documentId = args.documentId
             )
         }
-        composable<AddDocumentScreen> {
-            AddDocumentScreen(navigate = { navController.popBackStack() })
+        composable<AddDocumentScreen> { backStackEntry ->
+            val args = backStackEntry.toRoute<AddDocumentScreen>()
+            AddDocumentScreen(
+                navigate = { navController.popBackStack() },
+                folderId = args.folderId
+            )
         }
 
         composable<Database> {
@@ -110,6 +123,19 @@ fun Navigation() {
                 add = { navController.navigate(CategoryScreen) })
         }
         composable<CategoryScreen> { CategoryScreen(navigateBack = { navController.popBackStack() }) }
+        composable<FoldersScreen> {  Folders(
+            navigateBack = {navController.popBackStack()},
+            navigateToDocument ={folderId ->
+                navController.navigate(DocumentsScreen(folderId))
+            },
+            navigateToAdd = {navController.navigate(CreateFolderScreen)}
+        )
+        }
+        composable<CreateFolderScreen> {
+            CreateFolder(
+                navigate = { navController.popBackStack() },
+               )
+        }
     }
 }
 
@@ -117,7 +143,7 @@ fun Navigation() {
 object HomeScreen
 
 @Serializable
-object DocumentsScreen
+data class DocumentsScreen(val folderId: Long)
 
 @Serializable
 data class DocumentScreen(val documentId: Long, val documentName: String)
@@ -129,7 +155,7 @@ data class AddItemScreen(val barcode: String, val documentId: Long)
 data class AddItemScreenHandle(val documentId: Long)
 
 @Serializable
-object AddDocumentScreen
+data class AddDocumentScreen(val folderId: Long)
 
 @Serializable
 object Database
@@ -145,3 +171,9 @@ object CategoryScreen
 
 @Serializable
 object CategoriesScreen
+
+@Serializable
+object FoldersScreen
+
+@Serializable
+object CreateFolderScreen
